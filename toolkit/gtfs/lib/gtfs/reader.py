@@ -25,6 +25,7 @@ class GTFSReader:
 
     ref_trips: DataFrame
     route_types: []
+    graph_routes: DataFrame
 
     def load_feed(self, gtfs_file: str, route_types: [int], with_shapes: bool):
         try:
@@ -302,6 +303,13 @@ class GTFSReader:
         start_times = pd.merge(
             start_times,
             ref_list,
+            on=[ROUTE_NAME]
+        )
+
+        self.graph_routes = ref_list
+        self.graph_routes = pd.merge(
+            self.graph_routes,
+            self.routes[[ROUTE_NAME, ROUTE_ID]],
             on=[ROUTE_NAME]
         )
 

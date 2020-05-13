@@ -10,6 +10,7 @@ from lib.osm import OsmRouteParser
 from lib.project import Projector
 from lib.one import HostGroup, ScenarioSettings
 from lib.gtfs import GTFSReader
+from lib.makegraph import Graph
 from lib import writer
 from lib.commons import TransitRoute
 from typing import List
@@ -50,6 +51,9 @@ def main(args):
     gtfs = GTFSReader()
     gtfs.load_feed(args.gtfs_file, route_types=route_types, with_shapes=with_shapes)
 
+    services = gtfs.services
+    trips = gtfs.trips
+
     chosen_day = gtfs.get_first_day_from_feed('Monday')
     gtfs.set_trips_of_interest(type=0.0, day=chosen_day)
     gtfs.set_stop_times()
@@ -64,6 +68,9 @@ def main(args):
     points = set()
     for r in routes:
         points.update(r.nodes)
+
+    graph = Graph()
+    graph.make_graph(gtfs.graph_routes, services, trips)
 
     # initialize projection pane (width, height in m)
     # from coordinate bounds of all nodes
