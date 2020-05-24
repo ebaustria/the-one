@@ -154,6 +154,7 @@ public class ContactGraphRouter extends ActiveRouter {
 
 	@Override
 	public void changedConnection(Connection con) {
+		int address;
 		super.changedConnection(con);
 
 		if (create_cplan) {
@@ -175,7 +176,8 @@ public class ContactGraphRouter extends ActiveRouter {
 				List<Message> toDelete = new ArrayList<>();
 				for (Message m : getMessageCollection()) {
 					DTNHost other = con.getOtherNode(getHost());
-					if ((int)m.getProperty(NEXT_CONTACT) == other.getAddress()) {
+					address = returnAddress(m);
+					if (address == other.getAddress()) {
 						if (other.getMessageCollection().contains(m)) {
 							// message was successfully transfered, delete it
 							toDelete.add(m);
@@ -216,8 +218,8 @@ public class ContactGraphRouter extends ActiveRouter {
 	protected Connection tryMessagesToConnections(List<Message> messages, List<Connection> connections) {
 		for (int i = 0, n = messages.size(); i < n; i++) {
 			Message m = messages.get(i);
-			int next_hop_addr = (int) m.getProperty(NEXT_CONTACT);
-			double starting_time = (double) m.getProperty(STARTING_TIME);
+			int next_hop_addr = returnAddress(m);
+			double starting_time = returnTime(m);
 			// the message is scheduled for later on. Sending now could cause a buffered message
 			// to be deleted before sent
 			if (SimClock.getTime() < starting_time) {
@@ -231,10 +233,30 @@ public class ContactGraphRouter extends ActiveRouter {
 		}
 		return null;
 	}
+	
+	public int returnAddress(Message m) {
+		int address;
+		try {
+			address = (int) m.getProperty(NEXT_CONTACT);
+		} catch (Exception e) {
+			address = -1;
+		}
+		return address;
+	}
+	
+	public double returnTime(Message m) {
+		double time;
+		try {
+			time = (double) m.getProperty(STARTING_TIME);
+		} catch (Exception e) {
+			time = 0;
+		}
+		return time;
+	}
 
 	@Override
 	public boolean createNewMessage(Message m) {
-		if (!create_cplan && getFreeBufferSize() > m.getSize() && isMessageDeliverable(m)) {
+		if (!create_cplan && getFreeBufferSize() > m.getSize()) {
 			return super.createNewMessage(m);
 		}
 		return false;
