@@ -13,6 +13,7 @@ from lib.gtfs import GTFSReader
 from lib import writer
 from lib.commons import TransitRoute
 from typing import List
+import csv
 
 DATA_DIR = 'data'
 NODES_FILE = '{}_nodes.wkt'
@@ -153,6 +154,13 @@ def main(args):
             schedule=schedule.get(r.name),
             file=schedule_file.format(name)
         )
+
+    main_local_to_gps = proj.local_to_gps
+
+    with open('gps_coordinates.csv', 'w') as f:
+        writer2 = csv.writer(f)
+        for key, value in main_local_to_gps.items():
+            writer2.writerow([key, value])
 
     # add another group for all stations.
     # in this group, for each station one stationary host
