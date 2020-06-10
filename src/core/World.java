@@ -25,7 +25,7 @@ import java.util.Set;
  * location and connections.
  */
 public class World {
-	static Map<Double, HashSet<String>> time_locations;
+	String last_location;
 	/** name space of optimization settings ({@value})*/
 	public static final String OPTIMIZATION_SETTINGS_NS = "Optimization";
 
@@ -82,9 +82,9 @@ public class World {
 		this.simClock = SimClock.getInstance();
 		this.scheduledUpdates = new ScheduledUpdatesQueue();
 		this.isCancelled = false;
-		time_locations = new HashMap<Double, HashSet<String>>();
 		setNextEventQueue();
 		initSettings();
+		last_location = "";
 	}
 
 	/**
@@ -218,20 +218,16 @@ public class World {
 	 */
 	private void moveHosts(double timeIncrement) {
 		
-		/*
-		 * Builds a HashMap with timestamps as keys and sets of DTNHost coordinates at the
-		 * respective timestamps as values.
-		 */
-		HashSet<String> coords = new HashSet<String>();
-		
-		for (int i=0, n = hosts.size(); i<n; i++) {
-			DTNHost host = hosts.get(i);
-			coords.add(host.getLocation().toString());
-		}
-		time_locations.put(SimClock.getTime(), coords);
-		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
+			
+			//Prints location of each DTNHost and timestamp while simulation is running.
+			if (!host.getLocation().toString().equals(last_location)) {
+				System.out.print(host.getLocation().toString() + " ");
+				System.out.println(SimClock.getTime());
+			}
+			last_location = host.getLocation().toString();
+			
 			host.move(timeIncrement);
 		}
 	}
