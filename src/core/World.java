@@ -8,16 +8,24 @@ import input.EventQueue;
 import input.ExternalEvent;
 import input.ScheduledUpdatesQueue;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * World contains all the nodes and is responsible for updating their
  * location and connections.
  */
 public class World {
+	static Map<Double, HashSet<String>> time_locations;
 	/** name space of optimization settings ({@value})*/
 	public static final String OPTIMIZATION_SETTINGS_NS = "Optimization";
 
@@ -74,7 +82,7 @@ public class World {
 		this.simClock = SimClock.getInstance();
 		this.scheduledUpdates = new ScheduledUpdatesQueue();
 		this.isCancelled = false;
-
+		time_locations = new HashMap<Double, HashSet<String>>();
 		setNextEventQueue();
 		initSettings();
 	}
@@ -209,6 +217,19 @@ public class World {
 	 * @param timeIncrement The time how long all nodes should move
 	 */
 	private void moveHosts(double timeIncrement) {
+		
+		/*
+		 * Builds a HashMap with timestamps as keys and sets of DTNHost coordinates at the
+		 * respective timestamps as values.
+		 */
+		HashSet<String> coords = new HashSet<String>();
+		
+		for (int i=0, n = hosts.size(); i<n; i++) {
+			DTNHost host = hosts.get(i);
+			coords.add(host.getLocation().toString());
+		}
+		time_locations.put(SimClock.getTime(), coords);
+		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
 			host.move(timeIncrement);

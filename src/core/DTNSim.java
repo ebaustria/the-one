@@ -5,8 +5,12 @@
 package core;
 import gui.DTNSimGUI;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import ui.DTNSimTextUI;
@@ -40,6 +44,7 @@ public class DTNSim {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
+		
 		boolean batchMode = false;
 		int nrofRuns[] = {0,1};
 		String confFiles[];
@@ -91,6 +96,14 @@ public class DTNSim {
 			Settings.setRunIndex(guiIndex);
 			new DTNSimGUI().start();
 		}
+		
+		/*
+		 * Prints out the contents of the HashMap of timestamps and coordinates once the
+		 * simulation is finished running. Must be commented back in.
+		 */
+		//for (double time : World.time_locations.keySet()) {
+		//	System.out.println("time: " + time + ", coordinates: " + World.time_locations.get(time));
+		//}
 	}
 
 	/**
