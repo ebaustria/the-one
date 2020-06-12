@@ -25,7 +25,6 @@ import java.util.Set;
  * location and connections.
  */
 public class World {
-	String last_location;
 	/** name space of optimization settings ({@value})*/
 	public static final String OPTIMIZATION_SETTINGS_NS = "Optimization";
 
@@ -84,7 +83,6 @@ public class World {
 		this.isCancelled = false;
 		setNextEventQueue();
 		initSettings();
-		last_location = "";
 	}
 
 	/**
@@ -217,17 +215,20 @@ public class World {
 	 * @param timeIncrement The time how long all nodes should move
 	 */
 	private void moveHosts(double timeIncrement) {
+		ArrayList<String> last_hosts = new ArrayList<String>();
 		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
-			
-			//Prints location of each DTNHost and timestamp while simulation is running.
-			if (!host.getLocation().toString().equals(last_location)) {
+			/*
+			 * Prints location of each DTNHost whose coordinates have not yet been printed, and
+			 * prints timestamp for each host while simulation is running.
+			*/
+			if (!last_hosts.contains(host.getLocation().toString())) {
 				System.out.print(host.getLocation().toString() + " ");
-				System.out.println(SimClock.getTime());
+				System.out.println(SimClock.getTime() + ",");
 			}
-			last_location = host.getLocation().toString();
 			
+			last_hosts.add(host.getLocation().toString());
 			host.move(timeIncrement);
 		}
 	}
