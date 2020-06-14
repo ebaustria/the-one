@@ -215,21 +215,18 @@ public class World {
 	 * @param timeIncrement The time how long all nodes should move
 	 */
 	private void moveHosts(double timeIncrement) {
-		ArrayList<String> last_hosts = new ArrayList<String>();
 		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
-			/*
-			 * Prints location of each DTNHost whose coordinates have not yet been printed, and
-			 * prints timestamp for each host while simulation is running.
-			*/
-			if (!last_hosts.contains(host.getLocation().toString())) {
-				System.out.print(host.getLocation().toString() + " ");
-				System.out.println(SimClock.getTime() + ",");
-			}
-			
-			last_hosts.add(host.getLocation().toString());
+			printCoords(host);
 			host.move(timeIncrement);
+		}
+	}
+	
+	//Prints location and timestamp of each DTNHost that is currently in motion.
+	public void printCoords(DTNHost host) {
+		if (host.getNextTimeToMove() <= SimClock.getTime()) {
+			System.out.println(host.getLocation().toString() + " " + SimClock.getTime() + ",");
 		}
 	}
 

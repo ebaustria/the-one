@@ -92,6 +92,14 @@ public class DTNHost implements Comparable<DTNHost> {
 			}
 		}
 	}
+	
+	public Coord getDestination() {
+		return this.destination;
+	}
+	
+	public double getNextTimeToMove() {
+		return nextTimeToMove;
+	}
 
 	/**
 	 * Returns a new network interface address and increments the address for
