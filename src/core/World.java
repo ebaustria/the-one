@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,6 +45,7 @@ public class World {
 	 */
 	public static final String SIMULATE_CON_ONCE_S = "simulateConnectionsOnce";
 
+	private ArrayList<DTNHost> stations;
 	private int sizeX;
 	private int sizeY;
 	private List<EventQueue> eventQueues;
@@ -83,6 +85,13 @@ public class World {
 		this.isCancelled = false;
 		setNextEventQueue();
 		initSettings();
+		
+		stations = new ArrayList<DTNHost>();
+		for (DTNHost host : this.hosts) {
+			if (host.getNextTimeToMove() > 1000000) {
+				stations.add(host);
+			}
+		}
 	}
 
 	/**
@@ -223,11 +232,55 @@ public class World {
 		}
 	}
 	
-	//Prints location and timestamp of each DTNHost that is currently in motion.
+	//Prints arrival times and departure times of DTNHosts at stations, as well as coordinates
+	//of stations.
 	public void printCoords(DTNHost host) {
+		double max = 0;
+		double next_move = host.getNextTimeToMove();
+		double host_x = host.getLocation().getX();
+		double host_y = host.getLocation().getY();
+		
 		if (host.getNextTimeToMove() <= SimClock.getTime()) {
-			System.out.println(host.getLocation().toString() + " " + SimClock.getTime() + ",");
+			host.getLocationsAndTimes().put(host.getLocation(), SimClock.getTime());
 		}
+		
+		Set<Map.Entry<Coord, Double>> entries = host.getLocationsAndTimes().entrySet();
+		
+		for (DTNHost station : stations) {
+			if (Math.abs(host_x - station.getLocation().getX()) < 50) {
+				if (Math.abs(host_y - station.getLocation().getY()) < 50) {
+					if (next_move > SimClock.getTime() && next_move < SimClock.getTime() + 0.1 ) {
+						System.out.println(station.getLocation() + " " + next_move);
+						
+						if (host.getLocationsAndTimes().size() > 0) {
+							max = Collections.max(host.getLocationsAndTimes().values());
+						}
+
+						for (Entry<Coord, Double> entry : entries) {
+							double entry_x = entry.getKey().getX();
+							double entry_y = entry.getKey().getY();
+							
+							if (entry.getValue().equals(max)) {
+								for (DTNHost station1 : stations) {
+									double station1_x = station1.getLocation().getX();
+									double station1_y = station1.getLocation().getY();
+									
+									if (Math.abs(entry_x - station1_x) < 50) {
+										if (Math.abs(entry_y - station1_y) < 50) {
+											System.out.println(station1.getLocation() + " " + max);
+											break;
+										}
+									}
+								}
+							}
+						}
+						host.getLocationsAndTimes().clear();
+						break;
+					}
+				}
+			}
+		}
+		
 	}
 
 	/**

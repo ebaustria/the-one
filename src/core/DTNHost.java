@@ -7,6 +7,7 @@ package core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.HashMap;
 
 import movement.MovementModel;
 import movement.Path;
@@ -19,6 +20,7 @@ import static core.Constants.DEBUG;
  * A DTN capable host.
  */
 public class DTNHost implements Comparable<DTNHost> {
+	private HashMap<Coord, Double> locations_times;
 	private static int nextAddress = 0;
 	private int address;
 
@@ -56,6 +58,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto) {
+		locations_times = new HashMap<Coord, Double>();
 		this.communicationSystemON = true;
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
@@ -93,8 +96,8 @@ public class DTNHost implements Comparable<DTNHost> {
 		}
 	}
 	
-	public Coord getDestination() {
-		return this.destination;
+	public HashMap<Coord, Double> getLocationsAndTimes() {
+		return this.locations_times;
 	}
 	
 	public double getNextTimeToMove() {
