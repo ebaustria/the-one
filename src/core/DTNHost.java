@@ -100,6 +100,10 @@ public class DTNHost implements Comparable<DTNHost> {
 		return this.locations_times;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	public double getNextTimeToMove() {
 		return nextTimeToMove;
 	}

@@ -45,7 +45,7 @@ public class World {
 	 */
 	public static final String SIMULATE_CON_ONCE_S = "simulateConnectionsOnce";
 
-	private ArrayList<DTNHost> stations;
+	private static ArrayList<DTNHost> stations;
 	private int sizeX;
 	private int sizeY;
 	private List<EventQueue> eventQueues;
@@ -113,6 +113,10 @@ public class World {
 		else { // null pointer means "don't randomize"
 			this.updateOrder = null;
 		}
+	}
+	
+	public static ArrayList<DTNHost> getStations() {
+		return stations;
 	}
 
 	/**
@@ -227,60 +231,28 @@ public class World {
 		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
-			printCoords(host);
+			if (host.getNextTimeToMove() <= SimClock.getTime()) {
+				host.getLocationsAndTimes().put(host.getLocation(), SimClock.getTime());
+			}
+			printDeparture(host);
 			host.move(timeIncrement);
 		}
 	}
 	
-	//Prints arrival times and departure times of DTNHosts at stations, as well as coordinates
-	//of stations.
-	public void printCoords(DTNHost host) {
-		double max = 0;
+	public void printDeparture(DTNHost host) {
 		double next_move = host.getNextTimeToMove();
 		double host_x = host.getLocation().getX();
 		double host_y = host.getLocation().getY();
-		
-		if (host.getNextTimeToMove() <= SimClock.getTime()) {
-			host.getLocationsAndTimes().put(host.getLocation(), SimClock.getTime());
-		}
-		
-		Set<Map.Entry<Coord, Double>> entries = host.getLocationsAndTimes().entrySet();
 		
 		for (DTNHost station : stations) {
 			if (Math.abs(host_x - station.getLocation().getX()) < 50) {
 				if (Math.abs(host_y - station.getLocation().getY()) < 50) {
 					if (next_move > SimClock.getTime() && next_move < SimClock.getTime() + 0.1 ) {
-						System.out.println(station.getLocation() + " " + next_move);
-						
-						if (host.getLocationsAndTimes().size() > 0) {
-							max = Collections.max(host.getLocationsAndTimes().values());
-						}
-
-						for (Entry<Coord, Double> entry : entries) {
-							double entry_x = entry.getKey().getX();
-							double entry_y = entry.getKey().getY();
-							
-							if (entry.getValue().equals(max)) {
-								for (DTNHost station1 : stations) {
-									double station1_x = station1.getLocation().getX();
-									double station1_y = station1.getLocation().getY();
-									
-									if (Math.abs(entry_x - station1_x) < 50) {
-										if (Math.abs(entry_y - station1_y) < 50) {
-											System.out.println(station1.getLocation() + " " + max);
-											break;
-										}
-									}
-								}
-							}
-						}
-						host.getLocationsAndTimes().clear();
-						break;
+						System.out.println(host.getName() + " " + station.getLocation() + " " + next_move);
 					}
 				}
 			}
 		}
-		
 	}
 
 	/**

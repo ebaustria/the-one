@@ -5,10 +5,18 @@
 package movement;
 
 import core.Coord;
+import core.DTNHost;
 import core.Settings;
 import core.SimClock;
+import core.World;
 import movement.map.MapNode;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 /**
  * Map based movement model that uses predetermined paths within the map area.
@@ -75,9 +83,58 @@ public class TransitMapMovement extends MapBasedMovement implements
 	    tw.adjustSpeed(waitTime);
 	    return tw;
     }
+    
+    public void printArrival(DTNHost host) {
+		double max = 0;
+		double host_x = host.getLocation().getX();
+		double host_y = host.getLocation().getY();
+		ArrayList<DTNHost> stations = World.getStations();
+				
+		Set<Map.Entry<Coord, Double>> entries = host.getLocationsAndTimes().entrySet();
+		
+		try {
+			for (DTNHost station : stations) {
+				if (Math.abs(host_x - station.getLocation().getX()) < 50) {
+					if (Math.abs(host_y - station.getLocation().getY()) < 50) {
+						
+						if (host.getLocationsAndTimes().size() > 0) {
+							max = Collections.max(host.getLocationsAndTimes().values());
+						}
+
+						for (Entry<Coord, Double> entry : entries) {
+							double entry_x = entry.getKey().getX();
+							double entry_y = entry.getKey().getY();
+							
+							if (entry.getValue().equals(max)) {
+								for (DTNHost station1 : stations) {
+									double station1_x = station1.getLocation().getX();
+									double station1_y = station1.getLocation().getY();
+									
+									if (Math.abs(entry_x - station1_x) < 50) {
+										if (Math.abs(entry_y - station1_y) < 50) {
+											System.out.println(host.getName() + " " + station1.getLocation() + " " + max);
+											break;
+										}
+									}
+								}
+							}
+						}
+						host.getLocationsAndTimes().clear();
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Waiting for world to initialize.");
+		}
+	}
 
     @Override
 	public double nextPathAvailable() {
+    	DTNHost host = getHost();
+    	
+    	printArrival(host);
+    	
 		if (currentTrip.atFirstStop()) {
 			waitTime = 0;
 			// Turn of the communication system of mobile devices at initialization
