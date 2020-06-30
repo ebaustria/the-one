@@ -84,56 +84,61 @@ public class TransitMapMovement extends MapBasedMovement implements
 	    return tw;
     }
     
-    public void printArrival(DTNHost host) {
-		double max = 0;
-		double host_x = host.getLocation().getX();
-		double host_y = host.getLocation().getY();
-		ArrayList<DTNHost> stations = World.getStations();
+    /*
+	 * Print the vehicle's name, the coordinates of the station it is at, and
+	 * the timestamp when a vehicle arrives at a station.
+	 */
+    public void printArrival(DTNHost host, ArrayList<DTNHost> stations) {
+    	double max = -1;
+    	Set<Map.Entry<Coord, Double>> entries = host.getLocationsAndTimes().entrySet();
+    	
+    	/*
+    	 * Find the most recent timestamp from before the vehicle stopped at
+    	 * its current station and assign it to max.
+    	 */
+    	if (host.getLocationsAndTimes().size() > 0) {
+    		max = Collections.max(host.getLocationsAndTimes().values());
+    	}
+    	
+    	/*
+    	 * Find the coordinates of the key that has max as its value. Find the
+    	 * station that is closest to these coordinates and print the necessary
+    	 * information.
+    	 */
+    	for (Entry<Coord, Double> entry : entries) {
+	    	if (entry.getValue().equals(max)) {
+				double entry_x = entry.getKey().getX();
+				double entry_y = entry.getKey().getY();
 				
-		Set<Map.Entry<Coord, Double>> entries = host.getLocationsAndTimes().entrySet();
-		
-		try {
-			for (DTNHost station : stations) {
-				if (Math.abs(host_x - station.getLocation().getX()) < 50) {
-					if (Math.abs(host_y - station.getLocation().getY()) < 50) {
+				for (DTNHost station : stations) {
+					double station_x = station.getLocation().getX();
+					double station_y = station.getLocation().getY();
 						
-						if (host.getLocationsAndTimes().size() > 0) {
-							max = Collections.max(host.getLocationsAndTimes().values());
-						}
-
-						for (Entry<Coord, Double> entry : entries) {
-							double entry_x = entry.getKey().getX();
-							double entry_y = entry.getKey().getY();
-							
-							if (entry.getValue().equals(max)) {
-								for (DTNHost station1 : stations) {
-									double station1_x = station1.getLocation().getX();
-									double station1_y = station1.getLocation().getY();
-									
-									if (Math.abs(entry_x - station1_x) < 50) {
-										if (Math.abs(entry_y - station1_y) < 50) {
-											System.out.println(host.getName() + " " + station1.getLocation() + " " + max);
-											break;
-										}
-									}
-								}
-							}
-						}
+					if (Math.abs(entry_x - station_x) < 50 && Math.abs(entry_y - station_y) < 50) {
+						System.out.println(host.getName() + " " + station.getLocation() + " " + max);
 						host.getLocationsAndTimes().clear();
-						break;
+						return;
 					}
 				}
 			}
-		} catch (Exception e) {
-			System.out.println("Waiting for world to initialize.");
-		}
-	}
+    	}
+    }
 
     @Override
 	public double nextPathAvailable() {
     	DTNHost host = getHost();
+    	ArrayList<DTNHost> stations = World.getStations();
     	
-    	printArrival(host);
+    	/*
+    	 * The try-catch handles exceptions that are thrown when printArrival is
+    	 * called at the beginning of the simulation, before the world has been
+    	 * initialized.
+    	 */
+    	try {	
+			printArrival(host, stations);
+		} catch (Exception e) {
+			
+		}
     	
 		if (currentTrip.atFirstStop()) {
 			waitTime = 0;

@@ -88,7 +88,7 @@ public class World {
 		
 		stations = new ArrayList<DTNHost>();
 		for (DTNHost host : this.hosts) {
-			if (host.getNextTimeToMove() > 1000000) {
+			if (host.getNextTimeToMove() > 100000) {
 				stations.add(host);
 			}
 		}
@@ -238,18 +238,25 @@ public class World {
 			host.move(timeIncrement);
 		}
 	}
-	
+	/*
+	 * Print the vehicle's name, the coordinates of the station it is at, and
+	 * the timestamp when a vehicle leaves a station.
+	 */
 	public void printDeparture(DTNHost host) {
 		double next_move = host.getNextTimeToMove();
 		double host_x = host.getLocation().getX();
 		double host_y = host.getLocation().getY();
 		
+		/*
+		 * Find the station the vehicle is close to (station it is currently
+		 * stopped at). Just before the vehicle begins driving again, print the
+		 * necessary information.
+		 */
 		for (DTNHost station : stations) {
-			if (Math.abs(host_x - station.getLocation().getX()) < 50) {
-				if (Math.abs(host_y - station.getLocation().getY()) < 50) {
-					if (next_move > SimClock.getTime() && next_move < SimClock.getTime() + 0.1 ) {
-						System.out.println(host.getName() + " " + station.getLocation() + " " + next_move);
-					}
+			if (Math.abs(host_x - station.getLocation().getX()) < 50 && Math.abs(host_y - station.getLocation().getY()) < 50) {
+				if (next_move > SimClock.getTime() && next_move < SimClock.getTime() + 0.2 ) {
+					System.out.println(host.getName() + " " + station.getLocation() + " " + next_move);
+					return;
 				}
 			}
 		}
