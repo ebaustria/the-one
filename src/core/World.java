@@ -8,18 +8,16 @@ import input.EventQueue;
 import input.ExternalEvent;
 import input.ScheduledUpdatesQueue;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * World contains all the nodes and is responsible for updating their
@@ -44,8 +42,9 @@ public class World {
 	 * -setting id ({@value}). Boolean (true/false) variable.
 	 */
 	public static final String SIMULATE_CON_ONCE_S = "simulateConnectionsOnce";
-
-	private static ArrayList<DTNHost> stations;
+	private static File trace;
+	private static FileOutputStream fos;
+	private static BufferedWriter bw;
 	private int sizeX;
 	private int sizeY;
 	private List<EventQueue> eventQueues;
@@ -86,12 +85,14 @@ public class World {
 		setNextEventQueue();
 		initSettings();
 		
-		stations = new ArrayList<DTNHost>();
-		for (DTNHost host : this.hosts) {
-			if (host.getNextTimeToMove() > 100000) {
-				stations.add(host);
-			}
+		trace = new File("local_coordinates.txt");
+		try {
+			fos = new FileOutputStream(trace);
+		} catch (FileNotFoundException e) {
+			System.out.println("local_coordinates.txt was not found.");
+			e.printStackTrace();
 		}
+		bw = new BufferedWriter(new OutputStreamWriter(fos));
 	}
 
 	/**
@@ -115,8 +116,8 @@ public class World {
 		}
 	}
 	
-	public static ArrayList<DTNHost> getStations() {
-		return stations;
+	public static BufferedWriter getBW() {
+		return bw;
 	}
 
 	/**
@@ -165,6 +166,7 @@ public class World {
 	 * Update (move, connect, disconnect etc.) all hosts in the world.
 	 * Runs all external events that are due between the time when
 	 * this method is called and after one update interval.
+	 * @throws IOException 
 	 */
 	public void update () {
 		double runUntil = SimClock.getTime() + this.updateInterval;
@@ -226,39 +228,13 @@ public class World {
 	/**
 	 * Moves all hosts in the world for a given amount of time
 	 * @param timeIncrement The time how long all nodes should move
+	 * @throws IOException 
 	 */
 	private void moveHosts(double timeIncrement) {
 		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
-			if (host.getNextTimeToMove() <= SimClock.getTime()) {
-				host.getLocationsAndTimes().put(host.getLocation(), SimClock.getTime());
-			}
-			printDeparture(host);
 			host.move(timeIncrement);
-		}
-	}
-	/*
-	 * Print the vehicle's name, the coordinates of the station it is at, and
-	 * the timestamp when a vehicle leaves a station.
-	 */
-	public void printDeparture(DTNHost host) {
-		double next_move = host.getNextTimeToMove();
-		double host_x = host.getLocation().getX();
-		double host_y = host.getLocation().getY();
-		
-		/*
-		 * Find the station the vehicle is close to (station it is currently
-		 * stopped at). Just before the vehicle begins driving again, print the
-		 * necessary information.
-		 */
-		for (DTNHost station : stations) {
-			if (Math.abs(host_x - station.getLocation().getX()) < 50 && Math.abs(host_y - station.getLocation().getY()) < 50) {
-				if (next_move > SimClock.getTime() && next_move < SimClock.getTime() + 0.2 ) {
-					System.out.println(host.getName() + " " + station.getLocation() + " " + next_move);
-					return;
-				}
-			}
 		}
 	}
 

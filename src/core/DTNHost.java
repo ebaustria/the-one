@@ -4,11 +4,11 @@
  */
 package core;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.HashMap;
-
 import movement.MovementModel;
 import movement.Path;
 import routing.MessageRouter;
@@ -20,7 +20,7 @@ import static core.Constants.DEBUG;
  * A DTN capable host.
  */
 public class DTNHost implements Comparable<DTNHost> {
-	private HashMap<Coord, Double> locations_times;
+	//private HashMap<Coord, Double> locations_times;
 	private static int nextAddress = 0;
 	private int address;
 
@@ -38,6 +38,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
+	private boolean atWaypoint;
+	//private Coord lastDestination;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -58,7 +60,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto) {
-		locations_times = new HashMap<Coord, Double>();
+		atWaypoint = true;
 		this.communicationSystemON = true;
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
@@ -94,18 +96,6 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
-	}
-	
-	public HashMap<Coord, Double> getLocationsAndTimes() {
-		return this.locations_times;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public double getNextTimeToMove() {
-		return nextTimeToMove;
 	}
 
 	/**
@@ -401,16 +391,32 @@ public class DTNHost implements Comparable<DTNHost> {
 			}
 		}
 	}
+	
+	public String makeLine() {
+		String time = String.valueOf(SimClock.getTime());
+		String line = this.name + " " + this.location.toString() + " " + time;
+		return line;
+	}
+	
+	public static void writeLine(String line) throws IOException {
+		//File trace = World.getFile();
+		//FileOutputStream fos = World.getOS();
+		BufferedWriter bw = World.getBW();
+		bw.write(line);
+		bw.newLine();
+	}
 
 	/**
 	 * Moves the node towards the next waypoint or waits if it is
 	 * not time to move yet
 	 * @param timeIncrement How long time the node moves
+	 * @throws IOException 
 	 */
 	public void move(double timeIncrement) {
 		double possibleMovement;
 		double distance;
 		double dx, dy;
+		String line;
 
 		if (!isMovementActive() || SimClock.getTime() < this.nextTimeToMove) {
 			return;
@@ -422,6 +428,13 @@ public class DTNHost implements Comparable<DTNHost> {
 			
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
+			line = makeLine();
+			try {
+				writeLine(line);
+			} catch (IOException e) {
+				System.out.println("Exception occurred when writing to local_coordinates.txt");
+			}
+			atWaypoint = false;
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -430,6 +443,15 @@ public class DTNHost implements Comparable<DTNHost> {
 		while (possibleMovement >= distance) {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
+			line = makeLine();
+			try {
+				writeLine(line);
+			} catch (IOException e) {
+				System.out.println("Exception occurred when writing to local_coordinates.txt");
+				e.printStackTrace();
+			}
+			atWaypoint = true;
+			//this.lastDestination = this.destination;
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
 				this.destination = null; // No more waypoints left, therefore the destination must be null
@@ -443,7 +465,15 @@ public class DTNHost implements Comparable<DTNHost> {
 				this.location.getX());
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
+		//if (atWaypoint) {
+		//	System.out.println("Departure: " + this.name + " " + this.location + " " + SimClock.getTime());
+		//}
 		this.location.translate(dx, dy);
+		atWaypoint = false;
+		//if (this.location.equals(this.lastDestination)) {
+		//	System.out.println("Departure: " + this.name + " " + this.lastDestination + " " + SimClock.getTime());
+		//}
+		
 	}
 
 	/**
@@ -460,6 +490,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (path == null || !path.hasNext()) {
 			this.nextTimeToMove = movement.nextPathAvailable();
 			this.path = null;
+			atWaypoint = true;
 			return false;
 		}
 
@@ -471,7 +502,7 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.newDestination(this, this.destination, this.speed);
 			}
 		}
-		
+		atWaypoint = false;
 		return true;
 	}
 
