@@ -8,12 +8,7 @@ import input.EventQueue;
 import input.ExternalEvent;
 import input.ScheduledUpdatesQueue;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,9 +37,6 @@ public class World {
 	 * -setting id ({@value}). Boolean (true/false) variable.
 	 */
 	public static final String SIMULATE_CON_ONCE_S = "simulateConnectionsOnce";
-	private static File trace;
-	private static FileOutputStream fos;
-	private static BufferedWriter bw;
 	private int sizeX;
 	private int sizeY;
 	private List<EventQueue> eventQueues;
@@ -84,15 +76,6 @@ public class World {
 		this.isCancelled = false;
 		setNextEventQueue();
 		initSettings();
-		
-		trace = new File("local_coordinates.txt");
-		try {
-			fos = new FileOutputStream(trace);
-		} catch (FileNotFoundException e) {
-			System.out.println("local_coordinates.txt was not found.");
-			e.printStackTrace();
-		}
-		bw = new BufferedWriter(new OutputStreamWriter(fos));
 	}
 
 	/**
@@ -114,10 +97,6 @@ public class World {
 		else { // null pointer means "don't randomize"
 			this.updateOrder = null;
 		}
-	}
-	
-	public static BufferedWriter getBW() {
-		return bw;
 	}
 
 	/**

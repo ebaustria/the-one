@@ -4,7 +4,6 @@
  */
 package core;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +36,6 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
-	//private boolean atWaypoint;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -58,7 +56,6 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto) {
-		//atWaypoint = true;
 		this.communicationSystemON = true;
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
@@ -94,6 +91,10 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -390,18 +391,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		}
 	}
 	
-	public String makeLine() {
-		String time = String.valueOf(SimClock.getTime());
-		String line = this.name + " " + this.location.toString() + " " + time;
-		return line;
-	}
-	
-	public static void writeLine(String line) throws IOException {
-		BufferedWriter bw = World.getBW();
-		bw.write(line);
-		bw.newLine();
-	}
-
 	/**
 	 * Moves the node towards the next waypoint or waits if it is
 	 * not time to move yet
@@ -412,7 +401,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		double possibleMovement;
 		double distance;
 		double dx, dy;
-		String line;
 
 		if (!isMovementActive() || SimClock.getTime() < this.nextTimeToMove) {
 			return;
@@ -424,13 +412,12 @@ public class DTNHost implements Comparable<DTNHost> {
 			
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
-			line = makeLine();
-			try {
-				writeLine(line);
-			} catch (IOException e) {
-				System.out.println("Exception occurred when writing to local_coordinates.txt");
+			
+			if (this.movListeners != null) {
+				for (MovementListener l : this.movListeners) {
+					l.atWaypoint(this, this.location, SimClock.getTime());
+				}
 			}
-			//atWaypoint = false;
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -439,14 +426,12 @@ public class DTNHost implements Comparable<DTNHost> {
 		while (possibleMovement >= distance) {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
-			line = makeLine();
-			try {
-				writeLine(line);
-			} catch (IOException e) {
-				System.out.println("Exception occurred when writing to local_coordinates.txt");
-				e.printStackTrace();
+			
+			if (this.movListeners != null) {
+				for (MovementListener l : this.movListeners) {
+					l.atWaypoint(this, this.location, SimClock.getTime());
+				}
 			}
-			//atWaypoint = true;
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
 				this.destination = null; // No more waypoints left, therefore the destination must be null
@@ -461,7 +446,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
 		this.location.translate(dx, dy);
-		//atWaypoint = false;
 	}
 
 	/**
@@ -478,7 +462,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (path == null || !path.hasNext()) {
 			this.nextTimeToMove = movement.nextPathAvailable();
 			this.path = null;
-			//atWaypoint = true;
 			return false;
 		}
 
@@ -490,7 +473,6 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.newDestination(this, this.destination, this.speed);
 			}
 		}
-		//atWaypoint = false;
 		return true;
 	}
 

@@ -5,8 +5,6 @@
 package core;
 import gui.DTNSimGUI;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,12 +91,6 @@ public class DTNSim {
 		else {
 			Settings.setRunIndex(guiIndex);
 			new DTNSimGUI().start();
-		}
-		BufferedWriter bw = World.getBW();
-		try {
-			bw.close();
-		} catch (IOException e) {
-			System.out.println("An exception occurred when closing the buffered writer.");
 		}
 	}
 
