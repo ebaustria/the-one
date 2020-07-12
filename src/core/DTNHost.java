@@ -359,6 +359,12 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (!isRadioActive()) {
 			// Make sure inactive nodes don't have connections
 			tearDownAllConnections();
+
+            // TODO: change this 5 min to be configurable
+			if (SimClock.getTime() > this.nextTimeToMove - 300) {
+                setCommunicationSystemON(true);
+            }
+
 			return;
 		}
 
