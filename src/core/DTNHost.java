@@ -7,9 +7,15 @@ package core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+
+import input.TransitReader;
+import movement.MapBasedMovement;
 import movement.MovementModel;
 import movement.Path;
+import movement.TransitMapMovement;
+import movement.map.SimMap;
 import routing.MessageRouter;
 import routing.util.RoutingInfo;
 
@@ -21,11 +27,13 @@ import static core.Constants.DEBUG;
 public class DTNHost implements Comparable<DTNHost> {
 	private static int nextAddress = 0;
 	private int address;
+	private HashMap<String, String> untranslated;
 
 	private Coord location; 	// where is the host
 	private Coord destination;	// where is it going
 	private boolean communicationSystemON;	// communication System: ON = 1, OFF = 0
 
+	private SimMap map;
 	private MessageRouter router;
 	private MovementModel movement;
 	private Path path;
@@ -62,6 +70,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.address = getNextAddress();
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
+		this.untranslated = TransitReader.getUntranslated();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -80,6 +89,10 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.movement.setComBus(comBus);
 		this.movement.setHost(this);
 		setRouter(mRouterProto.replicate());
+		
+		if (movement instanceof MapBasedMovement) {
+			this.map = ((MapBasedMovement) movement).getMap();
+		}
 
 		this.location = movement.getInitialLocation();
 
@@ -404,6 +417,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @throws IOException 
 	 */
 	public void move(double timeIncrement) {
+		String waypoint;
 		double possibleMovement;
 		double distance;
 		double dx, dy;
@@ -419,9 +433,10 @@ public class DTNHost implements Comparable<DTNHost> {
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
 			
-			if (this.movListeners != null) {
-				for (MovementListener l : this.movListeners) {
-					l.atWaypoint(this, this.location, SimClock.getTime());
+			waypoint = this.location.toString();
+			for (String key : untranslated.keySet()) {
+				if (waypoint.equals(key)) {
+					writeWaypoint(this, untranslated.get(key), SimClock.getTime());
 				}
 			}
 		}
@@ -433,9 +448,10 @@ public class DTNHost implements Comparable<DTNHost> {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
 			
-			if (this.movListeners != null) {
-				for (MovementListener l : this.movListeners) {
-					l.atWaypoint(this, this.location, SimClock.getTime());
+			waypoint = this.location.toString();
+			for (String key : untranslated.keySet()) {
+				if (waypoint.equals(key)) {
+					writeWaypoint(this, untranslated.get(key), SimClock.getTime());
 				}
 			}
 			possibleMovement -= distance;
@@ -452,6 +468,14 @@ public class DTNHost implements Comparable<DTNHost> {
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
 		this.location.translate(dx, dy);
+	}
+
+	private void writeWaypoint(DTNHost dtnHost, String location, double time) {
+		if (dtnHost.movListeners != null) {
+			for (MovementListener l : dtnHost.movListeners) {
+				l.atWaypoint(dtnHost, location, time);
+			}
+		}
 	}
 
 	/**

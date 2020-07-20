@@ -86,4 +86,10 @@ public class MovementNs2Report extends Report implements MovementListener {
 		val = val == 0 ? EPSILON : val;
 		return String.format(COORD_FORMAT, val);
 	}
+
+	@Override
+	public void atWaypoint(DTNHost host, String location, double time) {
+		// TODO Auto-generated method stub
+		
+	}
 }
