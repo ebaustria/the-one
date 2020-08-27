@@ -434,11 +434,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			setCommunicationSystemON(true);
 			
 			waypoint = this.location.toString();
-			for (String key : untranslated.keySet()) {
-				if (waypoint.equals(key)) {
-					writeWaypoint(this, untranslated.get(key), SimClock.getTime());
-				}
-			}
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -449,11 +445,8 @@ public class DTNHost implements Comparable<DTNHost> {
 			this.location.setLocation(this.destination); // snap to destination
 			
 			waypoint = this.location.toString();
-			for (String key : untranslated.keySet()) {
-				if (waypoint.equals(key)) {
-					writeWaypoint(this, untranslated.get(key), SimClock.getTime());
-				}
-			}
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
 				this.destination = null; // No more waypoints left, therefore the destination must be null
