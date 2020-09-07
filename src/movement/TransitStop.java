@@ -73,6 +73,7 @@ public class TransitStop {
     	return new TransitStop(mn, 0);
     }
     
+    
     /**
      * In long distance bus connections, it is common that, after some hours, the bus
      * stops for longer periods of time. This period is set directly in the stop file
