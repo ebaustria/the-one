@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class TransitReader {
     private SimMap map;
     private long okMapType;
     private List<TransitStop> stops;
+    private static HashMap<String, String> untranslated;
 
     /*
      * We currently consider 1 stopFile and 1 scheduleFile.
@@ -50,6 +52,7 @@ public class TransitReader {
 		this.nodesFilename = nodesFilename;
 		this.map = map;
 		this.okMapType = okMap;
+		TransitReader.untranslated = new HashMap<String, String>();
 		// read stops from stop file as a list of transitNodes
 		try {
 			this.stops = readStops();
@@ -59,6 +62,10 @@ public class TransitReader {
 		}
 		// order the nodes, define paths and distances
 		buildPaths();
+	}
+	
+	public static HashMap<String, String> getUntranslated() {
+		return TransitReader.untranslated;
 	}
 	
 
@@ -140,6 +147,10 @@ public class TransitReader {
 	 * @return translated coordinate
 	 */
 	private void updateCoordinate(SimMap map, Coord c) {
+		String value;
+		String key;
+		
+		value = c.toString();
 		double xOffset = map.getOffset().getX();
 		double yOffset = map.getOffset().getY();
 
@@ -147,6 +158,9 @@ public class TransitReader {
 			c.setLocation(c.getX(), -c.getY());
 		}
 		c.translate(xOffset, yOffset);
+		
+		key = c.toString();
+		untranslated.put(key, value);
 	}
 
 	

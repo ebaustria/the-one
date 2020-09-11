@@ -4,9 +4,9 @@ import core.Coord;
 import core.DTNHost;
 import core.MovementListener;
 
-public class LocalCoordinates extends Report implements MovementListener {
+public class LocalCoordinatesReport extends Report implements MovementListener {
 	
-	public LocalCoordinates() {
+	public LocalCoordinatesReport() {
 		init();
 	}
 	
@@ -25,8 +25,8 @@ public class LocalCoordinates extends Report implements MovementListener {
 	}
 
 	@Override
-	public void atWaypoint(DTNHost host, Coord location, double time) {
+	public void atWaypoint(DTNHost host, String location, double time) {
 		setPrefix(host.getName());
-		write(" " + host.getLocation() + " " + time);
+		write(" " + location + " " + time);
 	}
 }
