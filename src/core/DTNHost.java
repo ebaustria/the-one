@@ -516,12 +516,18 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * {@link MessageRouter#receiveMessage(Message, DTNHost)}
 	 */
 	public int receiveMessage(Message m, DTNHost from) {
+		String waypoint;
 		int retVal = this.router.receiveMessage(m, from);
 
 		if (retVal == MessageRouter.RCV_OK) {
 			m.addNodeOnPath(this);	// add this node on the messages path
 		}
-
+		/*
+		waypoint = this.location.toString();
+		if (untranslated != null) {
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+		}
+		*/
 		return retVal;
 	}
 
@@ -560,9 +566,17 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param m The message to create
 	 */
 	public void createNewMessage(Message m) {
+		String waypoint;
+		
 		// do not create messages if the communication system is turned off
 		if (isCommunicationSystemON()){
 			this.router.createNewMessage(m);
+			/*
+			waypoint = this.location.toString();
+			if (untranslated != null) {
+				writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			}
+			*/
 		}
 	}
 
@@ -575,7 +589,16 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * way the removing is reported to the message listeners.
 	 */
 	public void deleteMessage(String id, boolean drop) {
+		String waypoint;
 		this.router.deleteMessage(id, drop);
+		/*
+		if (drop) {
+			waypoint = this.location.toString();
+			if (untranslated != null) {
+				writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			}
+		}
+		*/
 	}
 
 	/**
