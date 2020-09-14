@@ -6,6 +6,7 @@ package core;
 
 import input.EventQueue;
 import input.EventQueueHandler;
+import input.TransitReader;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -400,6 +401,10 @@ public class SimScenario implements Serializable {
 						mmProto, mRouterProto);
 				hosts.add(host);
 			}
+		}
+		for (DTNHost h : hosts) {
+			h.setUntranslated(TransitReader.getUntranslated());
+			h.buildTranslated();
 		}
 	}
 
