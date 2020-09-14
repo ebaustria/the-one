@@ -33,7 +33,7 @@ implements MovementListener {
 	}
 
 	@Override
-	public void atWaypoint(DTNHost host, String location, double time, int messages) {
+	public void atWaypoint(DTNHost host, String location, double time) {
 		// TODO Auto-generated method stub
 		
 	}
