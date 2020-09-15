@@ -152,10 +152,10 @@ public class TransitReader {
 	 * @return translated coordinate
 	 */
 	private void updateCoordinate(SimMap map, Coord c) {
-		String value;
-		String key;
+		String after;
+		String before;
 		
-		value = c.toString();
+		before = c.toString();
 		double xOffset = map.getOffset().getX();
 		double yOffset = map.getOffset().getY();
 
@@ -164,8 +164,8 @@ public class TransitReader {
 		}
 		c.translate(xOffset, yOffset);
 		
-		key = c.toString();
-		untranslated.put(key, value);
+		after = c.toString();
+		untranslated.put(after, before);
 	}
 
 	
