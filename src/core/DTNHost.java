@@ -109,6 +109,7 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		this.untranslated = TransitReader.getUntranslated();
 	}
 	
 	public void buildTranslated() {
@@ -457,8 +458,9 @@ public class DTNHost implements Comparable<DTNHost> {
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
 			
-			//waypoint = this.location.toString();
-			//writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+
+			waypoint = this.location.toString();
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -468,8 +470,8 @@ public class DTNHost implements Comparable<DTNHost> {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
 			
-			//waypoint = this.location.toString();
-			//writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			waypoint = this.location.toString();
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
 			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
@@ -489,10 +491,10 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.location.translate(dx, dy);
 	}
 
-	private void writeWaypoint(DTNHost dtnHost, String location, double time) {
+	private void writeWaypoint(DTNHost dtnHost, String location, double time, int messages) {
 		if (dtnHost.movListeners != null) {
 			for (MovementListener l : dtnHost.movListeners) {
-				l.atWaypoint(dtnHost, location, time);
+				l.atWaypoint(dtnHost, location, time, messages);
 			}
 		}
 	}
@@ -622,7 +624,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (isCommunicationSystemON()){
 			waypoint = this.location;
 			String location = closest(waypoint);
-			writeWaypoint(this, untranslated.get(location), SimClock.getTime());
+			writeWaypoint(this, untranslated.get(location), SimClock.getTime(), this.getNrofMessages());
 
 			this.router.createNewMessage(m);
 		}

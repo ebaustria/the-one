@@ -33,5 +33,5 @@ public interface MovementListener {
 	 * @param location The location of the host
 	 * @param time The current time of the SimClock
 	 */
-	public void atWaypoint(DTNHost host, String location, double time);
+	public void atWaypoint(DTNHost host, String location, double time, int messages);
 }
