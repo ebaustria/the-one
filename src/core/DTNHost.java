@@ -70,7 +70,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.address = getNextAddress();
 		this.name = groupId+address;
 		this.net = new ArrayList<NetworkInterface>();
-		this.untranslated = TransitReader.getUntranslated();
+		//this.untranslated = TransitReader.getUntranslated();
 
 		for (NetworkInterface i : interf) {
 			NetworkInterface ni = i.replicate();
@@ -104,6 +104,7 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		this.untranslated = TransitReader.getUntranslated();
 	}
 	
 	public String getName() {
@@ -434,7 +435,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			setCommunicationSystemON(true);
 			
 			waypoint = this.location.toString();
-			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -445,7 +446,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			this.location.setLocation(this.destination); // snap to destination
 			
 			waypoint = this.location.toString();
-			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
 			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
@@ -463,10 +464,10 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.location.translate(dx, dy);
 	}
 
-	private void writeWaypoint(DTNHost dtnHost, String location, double time) {
+	private void writeWaypoint(DTNHost dtnHost, String location, double time, int messages) {
 		if (dtnHost.movListeners != null) {
 			for (MovementListener l : dtnHost.movListeners) {
-				l.atWaypoint(dtnHost, location, time);
+				l.atWaypoint(dtnHost, location, time, messages);
 			}
 		}
 	}

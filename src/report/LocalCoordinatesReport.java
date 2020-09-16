@@ -25,8 +25,8 @@ public class LocalCoordinatesReport extends Report implements MovementListener {
 	}
 
 	@Override
-	public void atWaypoint(DTNHost host, String location, double time) {
+	public void atWaypoint(DTNHost host, String location, double time, int messages) {
 		setPrefix(host.getName());
-		write(" " + location + " " + time);
+		write(" " + location + " " + time + " " + messages);
 	}
 }
