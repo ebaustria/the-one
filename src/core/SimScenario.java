@@ -403,8 +403,7 @@ public class SimScenario implements Serializable {
 			}
 		}
 		for (DTNHost h : hosts) {
-			h.setUntranslated(TransitReader.getUntranslated());
-			h.buildTranslated();
+			h.setOffset(TransitReader.getOffset());
 		}
 	}
 

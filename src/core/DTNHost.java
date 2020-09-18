@@ -32,8 +32,8 @@ import static core.Constants.DEBUG;
 public class DTNHost implements Comparable<DTNHost> {
 	private static int nextAddress = 0;
 	private int address;
-	private HashMap<String, String> untranslated;
-	private ArrayList<Coord> translated;
+	//private ArrayList<String> translated;
+	private Coord offset;
 
 	private Coord location; 	// where is the host
 	private Coord destination;	// where is it going
@@ -109,27 +109,15 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
-		this.untranslated = TransitReader.getUntranslated();
 	}
 	
-	public void buildTranslated() {
-		this.translated = new ArrayList<Coord>();
-		Set<String> t = this.untranslated.keySet();
-		List<String> t2 = new ArrayList<String>(t);
-		
-		for (int i = 0; i < t2.size(); i++) {
-			String newString = t2.get(i).replace("(", "");
-			newString = newString.replace(")", "");
-			String[] coords = newString.split(",");
-			double x = Double.parseDouble(coords[0]);
-			double y = Double.parseDouble(coords[1]);
-			this.translated.add(new Coord(x, y));
-		}
+	public void setOffset(Coord offset) {
+		this.offset = offset;
 	}
 	
-	public void setUntranslated(HashMap<String, String> untranslated) {
-		this.untranslated = untranslated;
-	}
+	//public void setTranslated(ArrayList<String> translated) {
+	//	this.translated = translated;
+	//}
 	
 	public String getName() {
 		return this.name;
@@ -458,9 +446,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
 			
-
-			waypoint = this.location.toString();
-			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
+			//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -470,13 +456,11 @@ public class DTNHost implements Comparable<DTNHost> {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
 			
-			waypoint = this.location.toString();
-			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime(), this.getNrofMessages());
+			//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
-				//waypoint = this.location.toString();
-				//writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
+				//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 				this.destination = null; // No more waypoints left, therefore the destination must be null
 				return; // no more waypoints left
 			}
@@ -497,30 +481,6 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.atWaypoint(dtnHost, location, time, messages);
 			}
 		}
-	}
-	
-	public String closest(Coord location) {
-		if (untranslated.containsKey(location.toString())) {
-			return location.toString();
-		}
-		
-		double x = location.getX();
-		double y = location.getY();
-		Map<Double, Coord> map = new HashMap<Double, Coord>();
-		
-		for (int i = 0; i < translated.size(); i++) {
-			double untranslated_x = translated.get(i).getX();
-			double untranslated_y = translated.get(i).getY();
-			double x_dist = Math.abs(x - untranslated_x);
-			double y_dist = Math.abs(y - untranslated_y);
-			
-			map.put(x_dist + y_dist, translated.get(i));
-		}
-		
-		List<Double> distances = new ArrayList<Double>(map.keySet());
-		Collections.sort(distances);
-		
-		return map.get(distances.get(0)).toString();
 	}
 
 	/**
@@ -557,6 +517,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param to Host the message should be sent to
 	 */
 	public void sendMessage(String id, DTNHost to) {
+		//System.out.println("sending.");
+		//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		this.router.sendMessage(id, to);
 	}
 
@@ -568,18 +530,12 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * {@link MessageRouter#receiveMessage(Message, DTNHost)}
 	 */
 	public int receiveMessage(Message m, DTNHost from) {
-		String waypoint;
 		int retVal = this.router.receiveMessage(m, from);
 
 		if (retVal == MessageRouter.RCV_OK) {
 			m.addNodeOnPath(this);	// add this node on the messages path
 		}
-		/*
-		waypoint = this.location.toString();
-		if (untranslated != null) {
-			writeWaypoint(this, untranslated.get(waypoint), SimClock.getTime());
-		}
-		*/
+		//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		return retVal;
 	}
 
@@ -599,6 +555,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param from From who the message was from
 	 */
 	public void messageTransferred(String id, DTNHost from) {
+		//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		this.router.messageTransferred(id, from);
 	}
 
@@ -610,7 +567,24 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * would have been ready; or -1 if the number of bytes is not known
 	 */
 	public void messageAborted(String id, DTNHost from, int bytesRemaining) {
+		writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		this.router.messageAborted(id, from, bytesRemaining);
+	}
+	
+	/**
+	 * Calculates the untranslated location of this DTNHost for conversion
+	 * to GPS coordinates.
+	 * @return the untranslated location of this DTNHost
+	 */
+	public Coord untranslate() {
+		double x = this.location.getX() - this.offset.getX();
+		double y = this.location.getY() - this.offset.getY();
+		
+		if (TransitReader.isMirrored() == true) {
+			return new Coord(x, -y);
+		} else {
+			return new Coord(x, y);
+		}
 	}
 
 	/**
@@ -618,13 +592,11 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param m The message to create
 	 */
 	public void createNewMessage(Message m) {
-		Coord waypoint;
 		
 		// do not create messages if the communication system is turned off
 		if (isCommunicationSystemON()){
-			waypoint = this.location;
-			String location = closest(waypoint);
-			writeWaypoint(this, untranslated.get(location), SimClock.getTime(), this.getNrofMessages());
+			//writeWaypoint(this, untranslate().toString(), SimClock.getTime(),
+			//		this.getNrofMessages());
 
 			this.router.createNewMessage(m);
 		}
@@ -639,7 +611,9 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * way the removing is reported to the message listeners.
 	 */
 	public void deleteMessage(String id, boolean drop) {
-		String waypoint;
+		//if (drop) {
+		//	writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
+		//}
 		this.router.deleteMessage(id, drop);
 		/*
 		if (drop) {

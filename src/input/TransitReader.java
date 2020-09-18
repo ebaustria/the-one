@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -36,7 +35,8 @@ public class TransitReader {
     private SimMap map;
     private long okMapType;
     private List<TransitStop> stops;
-    private static HashMap<String, String> untranslated;
+    private static Coord offset;
+    private static boolean mirrored;
 
     /*
      * We currently consider 1 stopFile and 1 scheduleFile.
@@ -52,7 +52,7 @@ public class TransitReader {
 		this.nodesFilename = nodesFilename;
 		this.map = map;
 		this.okMapType = okMap;
-		TransitReader.untranslated = new HashMap<String, String>();
+		
 		// read stops from stop file as a list of transitNodes
 		try {
 			this.stops = readStops();
@@ -64,10 +64,13 @@ public class TransitReader {
 		buildPaths();
 	}
 	
-	public static HashMap<String, String> getUntranslated() {
-		return TransitReader.untranslated;
+	public static Coord getOffset() {
+		return TransitReader.offset;
 	}
 	
+	public static boolean isMirrored() {
+		return TransitReader.mirrored;
+	}
 
 	/**
 	 * Read the stop file as an ordered list of Transitstops
@@ -152,20 +155,18 @@ public class TransitReader {
 	 * @return translated coordinate
 	 */
 	private void updateCoordinate(SimMap map, Coord c) {
-		String after;
-		String before;
-		
-		before = c.toString();
 		double xOffset = map.getOffset().getX();
 		double yOffset = map.getOffset().getY();
 
 		if (map.isMirrored()) {
 			c.setLocation(c.getX(), -c.getY());
+			mirrored = true;
+		} else {
+			mirrored = false;
 		}
 		c.translate(xOffset, yOffset);
 		
-		after = c.toString();
-		untranslated.put(after, before);
+		offset = new Coord(xOffset, yOffset);
 	}
 
 	
