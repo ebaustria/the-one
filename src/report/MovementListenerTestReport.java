@@ -31,10 +31,4 @@ implements MovementListener {
 			DELEGATE.initialLocation(host, location);
 		}
 	}
-
-	@Override
-	public void atWaypoint(DTNHost host, String location, double time, int messages) {
-		// TODO Auto-generated method stub
-		
-	}
 }

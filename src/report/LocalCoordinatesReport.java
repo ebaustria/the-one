@@ -1,10 +1,9 @@
 package report;
 
-import core.Coord;
 import core.DTNHost;
-import core.MovementListener;
+import core.DeckMovementListener;
 
-public class LocalCoordinatesReport extends Report implements MovementListener {
+public class LocalCoordinatesReport extends Report implements DeckMovementListener {
 	
 	public LocalCoordinatesReport() {
 		init();
@@ -13,17 +12,7 @@ public class LocalCoordinatesReport extends Report implements MovementListener {
 	protected void init() {
 		super.init();
 	}
-
-	@Override
-	public void newDestination(DTNHost host, Coord destination, double speed) {
-		return;
-	}
-
-	@Override
-	public void initialLocation(DTNHost host, Coord location) {
-		return;
-	}
-
+	
 	@Override
 	public void atWaypoint(DTNHost host, String location, double time, int messages) {
 		setPrefix(host.getName());

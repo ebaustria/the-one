@@ -114,6 +114,8 @@ public class SimScenario implements Serializable {
 	private List<MessageListener> messageListeners;
 	/** Global movement event listeners */
 	private List<MovementListener> movementListeners;
+	private List<DeckMessageListener> dMessageListeners;
+	private List<DeckMovementListener> dMovementListeners;
 	/** Global update event listeners */
 	private List<UpdateListener> updateListeners;
 	/** Global application event listeners */
@@ -149,6 +151,8 @@ public class SimScenario implements Serializable {
 
 		this.connectionListeners = new ArrayList<ConnectionListener>();
 		this.messageListeners = new ArrayList<MessageListener>();
+		this.dMovementListeners = new ArrayList<DeckMovementListener>();
+		this.dMessageListeners = new ArrayList<DeckMessageListener>();
 		this.movementListeners = new ArrayList<MovementListener>();
 		this.updateListeners = new ArrayList<UpdateListener>();
 		this.appListeners = new ArrayList<ApplicationListener>();
@@ -267,6 +271,22 @@ public class SimScenario implements Serializable {
 	 */
 	public void addMessageListener(MessageListener ml){
 		this.messageListeners.add(ml);
+	}
+	
+	/**
+	 * Adds a movement listener to write a movement trace of all nodes
+	 * @param dl The listener
+	 */
+	public void addDeckMovementListener(DeckMovementListener dl) {
+		this.dMovementListeners.add(dl);
+	}
+	
+	/**
+	 * Adds a message listener to write a trace of messaging behavior of all nodes
+	 * @param dl The listener
+	 */
+	public void addDeckMessageListener(DeckMessageListener dl) {
+		this.dMessageListeners.add(dl);
 	}
 
 	/**
@@ -396,7 +416,7 @@ public class SimScenario implements Serializable {
 
 				// prototypes are given to new DTNHost which replicates
 				// new instances of movement model and message router
-				DTNHost host = new DTNHost(this.messageListeners,
+				DTNHost host = new DTNHost(this.dMovementListeners, this.dMessageListeners, this.messageListeners,
 						this.movementListeners,	gid, interfaces, comBus,
 						mmProto, mRouterProto);
 				hosts.add(host);

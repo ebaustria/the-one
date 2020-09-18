@@ -10,6 +10,8 @@ import report.Report;
 import routing.cgr.ContactPlanHandler;
 import core.ApplicationListener;
 import core.ConnectionListener;
+import core.DeckMessageListener;
+import core.DeckMovementListener;
 import core.MessageListener;
 import core.MovementListener;
 import core.Settings;
@@ -155,6 +157,12 @@ public abstract class DTNSimUI {
 		}
 		if (r instanceof ApplicationListener) {
 			scen.addApplicationListener((ApplicationListener)r);
+		}
+		if (r instanceof DeckMessageListener) {
+			scen.addDeckMessageListener((DeckMessageListener)r);
+		}
+		if (r instanceof DeckMovementListener) {
+			scen.addDeckMovementListener((DeckMovementListener)r);
 		}
 
 		this.reports.add(r);
