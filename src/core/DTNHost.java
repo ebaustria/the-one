@@ -539,8 +539,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param to Host the message should be sent to
 	 */
 	public void sendMessage(String id, DTNHost to) {
-		//System.out.println("sending.");
-		//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
+		writeMessage(untranslate().toString(), SimClock.getTime(), "sending message");
 		this.router.sendMessage(id, to);
 	}
 
@@ -557,7 +556,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (retVal == MessageRouter.RCV_OK) {
 			m.addNodeOnPath(this);	// add this node on the messages path
 		}
-		writeMessage(untranslate().toString(), SimClock.getTime(), "receiving message");
+		//writeMessage(untranslate().toString(), SimClock.getTime(), "receiving message");
 		return retVal;
 	}
 
@@ -577,7 +576,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param from From who the message was from
 	 */
 	public void messageTransferred(String id, DTNHost from) {
-		writeMessage(untranslate().toString(), SimClock.getTime(), "message transferred");
+		writeMessage(untranslate().toString(), SimClock.getTime(), "transfer complete");
 		this.router.messageTransferred(id, from);
 	}
 
@@ -615,9 +614,9 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * way the removing is reported to the message listeners.
 	 */
 	public void deleteMessage(String id, boolean drop) {
-		//if (drop) {
-		//	writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
-		//}
+		if (drop) {
+			writeMessage(untranslate().toString(), SimClock.getTime(), "message dropped");
+		}
 		this.router.deleteMessage(id, drop);
 	}
 
