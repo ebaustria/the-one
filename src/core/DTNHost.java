@@ -51,6 +51,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
+	private String lastLineWritten;
+	private String lastMsg;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -106,6 +108,8 @@ public class DTNHost implements Comparable<DTNHost> {
 
 		this.nextTimeToMove = movement.nextPathAvailable();
 		this.path = null;
+		this.lastLineWritten = null;
+		this.lastMsg = null;
 
 		if (movLs != null) { // inform movement listeners about the location
 			for (MovementListener l : movLs) {
@@ -551,12 +555,18 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * {@link MessageRouter#receiveMessage(Message, DTNHost)}
 	 */
 	public int receiveMessage(Message m, DTNHost from) {
+		String currentData = untranslate().toString() + " " + SimClock.getTime() + " " + "receiving message";
+		String currentMsg = m.getId();
 		int retVal = this.router.receiveMessage(m, from);
 
 		if (retVal == MessageRouter.RCV_OK) {
 			m.addNodeOnPath(this);	// add this node on the messages path
 		}
-		//writeMessage(untranslate().toString(), SimClock.getTime(), "receiving message");
+		if (!(currentData.equals(this.lastLineWritten)) && !(currentMsg.equals(this.lastMsg))) {
+			writeMessage(untranslate().toString(), SimClock.getTime(), "receiving message");
+			this.lastLineWritten = currentData;
+			this.lastMsg = currentMsg;
+		}
 		return retVal;
 	}
 
@@ -576,7 +586,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param from From who the message was from
 	 */
 	public void messageTransferred(String id, DTNHost from) {
-		writeMessage(untranslate().toString(), SimClock.getTime(), "transfer complete");
+		//writeMessage(untranslate().toString(), SimClock.getTime(), "transfer complete");
 		this.router.messageTransferred(id, from);
 	}
 
