@@ -25,5 +25,4 @@ public interface MovementListener {
 	 * @param location Coordinates of the location
 	 */
 	public void initialLocation(DTNHost host, Coord location);
-
 }

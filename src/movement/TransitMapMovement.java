@@ -8,6 +8,7 @@ import core.Coord;
 import core.Settings;
 import core.SimClock;
 import movement.map.MapNode;
+
 import java.util.List;
 
 /**
@@ -78,6 +79,7 @@ public class TransitMapMovement extends MapBasedMovement implements
 
     @Override
 	public double nextPathAvailable() {
+    	
 		if (currentTrip.atFirstStop()) {
 			waitTime = 0;
 			// Turn of the communication system of mobile devices at initialization

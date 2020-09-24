@@ -10,6 +10,7 @@ class Projector:
 
     def __init__(self, precision: int):
         self.precision = precision
+        self.local_to_gps = {}
 
     def init_dimensions(self, coords: Set[Tuple[float, float]]) -> (float, float):
         for c in coords:
@@ -40,6 +41,7 @@ class Projector:
                     (c[0], c[1]), (self.lat_min, c[1])
                 ).m, self.precision)
             new_coords.append((newC0,newC1))
+            self.local_to_gps[(newC0, newC1)] = c
             # Debug
             #print("({},{}) --> ({},{})".format(c[0], c[1], newC0, newC1))
         return new_coords

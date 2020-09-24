@@ -8,6 +8,7 @@ import input.EventQueue;
 import input.ExternalEvent;
 import input.ScheduledUpdatesQueue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +37,6 @@ public class World {
 	 * -setting id ({@value}). Boolean (true/false) variable.
 	 */
 	public static final String SIMULATE_CON_ONCE_S = "simulateConnectionsOnce";
-
 	private int sizeX;
 	private int sizeY;
 	private List<EventQueue> eventQueues;
@@ -74,7 +74,6 @@ public class World {
 		this.simClock = SimClock.getInstance();
 		this.scheduledUpdates = new ScheduledUpdatesQueue();
 		this.isCancelled = false;
-
 		setNextEventQueue();
 		initSettings();
 	}
@@ -146,6 +145,7 @@ public class World {
 	 * Update (move, connect, disconnect etc.) all hosts in the world.
 	 * Runs all external events that are due between the time when
 	 * this method is called and after one update interval.
+	 * @throws IOException 
 	 */
 	public void update () {
 		double runUntil = SimClock.getTime() + this.updateInterval;
@@ -207,8 +207,10 @@ public class World {
 	/**
 	 * Moves all hosts in the world for a given amount of time
 	 * @param timeIncrement The time how long all nodes should move
+	 * @throws IOException 
 	 */
 	private void moveHosts(double timeIncrement) {
+		
 		for (int i=0,n = hosts.size(); i<n; i++) {
 			DTNHost host = hosts.get(i);
 			host.move(timeIncrement);

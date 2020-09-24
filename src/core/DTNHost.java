@@ -4,14 +4,25 @@
  */
 package core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+import java.util.Set;
+import java.util.Collections;
 
+import input.TransitReader;
+import movement.MapBasedMovement;
 import movement.MovementModel;
 import movement.Path;
+import movement.TransitMapMovement;
+import movement.TransitStop;
+import movement.map.SimMap;
 import routing.MessageRouter;
 import routing.util.RoutingInfo;
+//import sun.tools.tree.ThisExpression;
 
 import static core.Constants.DEBUG;
 
@@ -21,21 +32,27 @@ import static core.Constants.DEBUG;
 public class DTNHost implements Comparable<DTNHost> {
 	private static int nextAddress = 0;
 	private int address;
+	private Coord offset;
 
 	private Coord location; 	// where is the host
 	private Coord destination;	// where is it going
 	private boolean communicationSystemON;	// communication System: ON = 1, OFF = 0
 
+	private SimMap map;
 	private MessageRouter router;
 	private MovementModel movement;
 	private Path path;
 	private double speed;
 	private double nextTimeToMove;
 	private String name;
+	private List<DeckMessageListener> dMsgListeners;
+	private List<DeckMovementListener> dMovListeners;
 	private List<MessageListener> msgListeners;
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
+	private String lastLineWritten;
+	private String lastMsg;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -51,7 +68,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param mmProto Prototype of the movement model of this host
 	 * @param mRouterProto Prototype of the message router of this host
 	 */
-	public DTNHost(List<MessageListener> msgLs,
+	public DTNHost(List<DeckMovementListener> dMovLs, List<DeckMessageListener> dMsgLs, List<MessageListener> msgLs,
 			List<MovementListener> movLs,
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
@@ -74,23 +91,39 @@ public class DTNHost implements Comparable<DTNHost> {
 
 		this.msgListeners = msgLs;
 		this.movListeners = movLs;
+		this.dMsgListeners = dMsgLs;
+		this.dMovListeners = dMovLs;
 
 		// create instances by replicating the prototypes
 		this.movement = mmProto.replicate();
 		this.movement.setComBus(comBus);
 		this.movement.setHost(this);
 		setRouter(mRouterProto.replicate());
+		
+		if (movement instanceof MapBasedMovement) {
+			this.map = ((MapBasedMovement) movement).getMap();
+		}
 
 		this.location = movement.getInitialLocation();
 
 		this.nextTimeToMove = movement.nextPathAvailable();
 		this.path = null;
+		this.lastLineWritten = null;
+		this.lastMsg = null;
 
 		if (movLs != null) { // inform movement listeners about the location
 			for (MovementListener l : movLs) {
 				l.initialLocation(this, this.location);
 			}
 		}
+	}
+	
+	public void setOffset(Coord offset) {
+		this.offset = offset;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -392,11 +425,12 @@ public class DTNHost implements Comparable<DTNHost> {
 			}
 		}
 	}
-
+	
 	/**
 	 * Moves the node towards the next waypoint or waits if it is
 	 * not time to move yet
 	 * @param timeIncrement How long time the node moves
+	 * @throws IOException 
 	 */
 	public void move(double timeIncrement) {
 		double possibleMovement;
@@ -412,7 +446,9 @@ public class DTNHost implements Comparable<DTNHost> {
 			}
 			
 			// A device will move, start the communication system
-			//setCommunicationSystemON(true);
+			setCommunicationSystemON(true);
+			
+			writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -421,8 +457,12 @@ public class DTNHost implements Comparable<DTNHost> {
 		while (possibleMovement >= distance) {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
+			
+			writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
+			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
+				//writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
 				this.destination = null; // No more waypoints left, therefore the destination must be null
 				return; // no more waypoints left
 			}
@@ -435,6 +475,22 @@ public class DTNHost implements Comparable<DTNHost> {
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
 		this.location.translate(dx, dy);
+	}
+
+	private void writeWaypoint(DTNHost dtnHost, String location, double time, int messages) {
+		if (dtnHost.movListeners != null) {
+			for (DeckMovementListener d : dtnHost.dMovListeners) {
+				d.atWaypoint(dtnHost, location, time, messages);
+			}
+		}
+	}
+	
+	private void writeMessage(String location, double time, String action) {
+		if (this.dMsgListeners != null) {
+			for (DeckMessageListener d : this.dMsgListeners) {
+				d.writeMessage(location, time, action);
+			}
+		}
 	}
 
 	/**
@@ -462,8 +518,23 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.newDestination(this, this.destination, this.speed);
 			}
 		}
-		
 		return true;
+	}
+	
+	/**
+	 * Calculates the untranslated location of this DTNHost for conversion
+	 * to GPS coordinates.
+	 * @return the untranslated location of this DTNHost
+	 */
+	public Coord untranslate() {
+		double x = this.location.getX() - this.offset.getX();
+		double y = this.location.getY() - this.offset.getY();
+		
+		if (TransitReader.isMirrored() == true) {
+			return new Coord(x, -y);
+		} else {
+			return new Coord(x, y);
+		}
 	}
 
 	/**
@@ -472,6 +543,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param to Host the message should be sent to
 	 */
 	public void sendMessage(String id, DTNHost to) {
+		writeMessage(untranslate().toString(), SimClock.getTime(), "sending message");
 		this.router.sendMessage(id, to);
 	}
 
@@ -483,12 +555,18 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * {@link MessageRouter#receiveMessage(Message, DTNHost)}
 	 */
 	public int receiveMessage(Message m, DTNHost from) {
+		String currentData = untranslate().toString() + " " + SimClock.getTime() + " " + "receiving message";
+		String currentMsg = m.getId();
 		int retVal = this.router.receiveMessage(m, from);
 
 		if (retVal == MessageRouter.RCV_OK) {
 			m.addNodeOnPath(this);	// add this node on the messages path
 		}
-
+		if (!(currentData.equals(this.lastLineWritten)) && !(currentMsg.equals(this.lastMsg))) {
+			writeMessage(untranslate().toString(), SimClock.getTime(), "receiving message");
+			this.lastLineWritten = currentData;
+			this.lastMsg = currentMsg;
+		}
 		return retVal;
 	}
 
@@ -508,6 +586,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param from From who the message was from
 	 */
 	public void messageTransferred(String id, DTNHost from) {
+		//writeMessage(untranslate().toString(), SimClock.getTime(), "transfer complete");
 		this.router.messageTransferred(id, from);
 	}
 
@@ -519,6 +598,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * would have been ready; or -1 if the number of bytes is not known
 	 */
 	public void messageAborted(String id, DTNHost from, int bytesRemaining) {
+		writeMessage(untranslate().toString(), SimClock.getTime(), "transfer aborted");
 		this.router.messageAborted(id, from, bytesRemaining);
 	}
 
@@ -527,8 +607,10 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param m The message to create
 	 */
 	public void createNewMessage(Message m) {
+		
 		// do not create messages if the communication system is turned off
 		if (isCommunicationSystemON()){
+			writeMessage(untranslate().toString(), SimClock.getTime(), "message created");
 			this.router.createNewMessage(m);
 		}
 	}
@@ -542,6 +624,9 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * way the removing is reported to the message listeners.
 	 */
 	public void deleteMessage(String id, boolean drop) {
+		if (drop) {
+			writeMessage(untranslate().toString(), SimClock.getTime(), "message dropped");
+		}
 		this.router.deleteMessage(id, drop);
 	}
 

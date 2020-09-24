@@ -35,6 +35,8 @@ public class TransitReader {
     private SimMap map;
     private long okMapType;
     private List<TransitStop> stops;
+    private static Coord offset;
+    private static boolean mirrored;
 
     /*
      * We currently consider 1 stopFile and 1 scheduleFile.
@@ -50,6 +52,7 @@ public class TransitReader {
 		this.nodesFilename = nodesFilename;
 		this.map = map;
 		this.okMapType = okMap;
+		
 		// read stops from stop file as a list of transitNodes
 		try {
 			this.stops = readStops();
@@ -61,6 +64,13 @@ public class TransitReader {
 		buildPaths();
 	}
 	
+	public static Coord getOffset() {
+		return TransitReader.offset;
+	}
+	
+	public static boolean isMirrored() {
+		return TransitReader.mirrored;
+	}
 
 	/**
 	 * Read the stop file as an ordered list of Transitstops
@@ -150,8 +160,13 @@ public class TransitReader {
 
 		if (map.isMirrored()) {
 			c.setLocation(c.getX(), -c.getY());
+			mirrored = true;
+		} else {
+			mirrored = false;
 		}
 		c.translate(xOffset, yOffset);
+		
+		offset = new Coord(xOffset, yOffset);
 	}
 
 	
