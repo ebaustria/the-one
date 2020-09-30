@@ -116,6 +116,7 @@ public class SimScenario implements Serializable {
 	private List<MovementListener> movementListeners;
 	private List<DeckMessageListener> dMessageListeners;
 	private List<DeckMovementListener> dMovementListeners;
+	private List<ArrivalListener> arrivalListeners;
 	/** Global update event listeners */
 	private List<UpdateListener> updateListeners;
 	/** Global application event listeners */
@@ -153,6 +154,7 @@ public class SimScenario implements Serializable {
 		this.messageListeners = new ArrayList<MessageListener>();
 		this.dMovementListeners = new ArrayList<DeckMovementListener>();
 		this.dMessageListeners = new ArrayList<DeckMessageListener>();
+		this.arrivalListeners = new ArrayList<ArrivalListener>();
 		this.movementListeners = new ArrayList<MovementListener>();
 		this.updateListeners = new ArrayList<UpdateListener>();
 		this.appListeners = new ArrayList<ApplicationListener>();
@@ -288,6 +290,14 @@ public class SimScenario implements Serializable {
 	public void addDeckMessageListener(DeckMessageListener dl) {
 		this.dMessageListeners.add(dl);
 	}
+	
+	/**
+	 * Adds an arrival listener to write an arrival trace of all nodes
+	 * @param a The listener
+	 */
+	public void addArrivalListener(ArrivalListener a) {
+		this.arrivalListeners.add(a);
+	}
 
 	/**
 	 * Adds a new movement listener for all nodes
@@ -416,9 +426,9 @@ public class SimScenario implements Serializable {
 
 				// prototypes are given to new DTNHost which replicates
 				// new instances of movement model and message router
-				DTNHost host = new DTNHost(this.dMovementListeners, this.dMessageListeners, this.messageListeners,
-						this.movementListeners,	gid, interfaces, comBus,
-						mmProto, mRouterProto);
+				DTNHost host = new DTNHost(this.arrivalListeners, this.dMovementListeners,
+						this.dMessageListeners, this.messageListeners, this.movementListeners,
+						gid, interfaces, comBus, mmProto, mRouterProto);
 				hosts.add(host);
 			}
 		}
@@ -442,5 +452,4 @@ public class SimScenario implements Serializable {
 	public World getWorld() {
 		return this.world;
 	}
-
 }

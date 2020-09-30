@@ -9,7 +9,7 @@ Scenario.name = freiburg1True_router:%%Group.router%%_bSize:%%Group.bufferSize%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 604800
+Scenario.endTime = 64800
 
 ## Interface-specific settings:
 # type : which interface class the interface belongs to
@@ -96,7 +96,7 @@ MovementModel.warmup = 0
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 2
+Report.nrofReports = 3
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 # default directory of reports (can be overridden per Report with output setting)
@@ -104,6 +104,7 @@ Report.reportDir = reports/
 # Report classes to load
 Report.report1 = MessageCoordinatesReport
 Report.report2 = LocalCoordinatesReport
+Report.report3 = ArrivalCoordinatesReport
 
 ## Default settings for some routers settings
 ProphetRouter.secondsInTimeUnit = 30
