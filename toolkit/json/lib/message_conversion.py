@@ -89,5 +89,6 @@ def combine_lists(timestamps: List[Tuple[Tuple[float, float], float, str]],
             if coords == local:
                 new = (gps, timestamp, action)
                 final_coords.append(new)
+                break
 
     return final_coords

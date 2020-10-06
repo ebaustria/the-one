@@ -11,19 +11,19 @@ arrivals = sys.argv[3]
 messages = sys.argv[4]
 scenario = sys.argv[5]
 
-print("Making trips JSON...")
+print("Making trips.json...")
 coord_conversion.make_trips(local_coords, gps_coords, scenario)
 
-print("Making routes JSON...")
+print("Making routes.json...")
 route_conversion.make_routes(gps_coords, scenario)
 
-print("Making stops JSON...")
+print("Making stops.json...")
 stop_conversion.make_stops(gps_coords, scenario)
 
-print("Making arrivals JSON...")
+print("Making arrivals.json...")
 arrival_conversion.make_arrivals(arrivals, gps_coords, scenario)
 
-print("Making messages JSON...")
+print("Making messages.json...")
 message_conversion.message_json(messages, gps_coords, scenario)
 
 # print("Making carried messages JSON...")
