@@ -158,7 +158,7 @@ def main(args):
 
     main_local_to_gps = proj.local_to_gps
 
-    with open('gps_coordinates.csv', 'w') as f:
+    with open(scenario + "_gps_coordinates.csv", 'w') as f:
         writer2 = csv.writer(f)
         for key, value in sorted(main_local_to_gps.items()):
             writer2.writerow([key, value])
