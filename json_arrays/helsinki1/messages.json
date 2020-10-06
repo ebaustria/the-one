@@ -5582,5 +5582,333 @@
     ],
     "timestamp": 61260.0,
     "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.923250198,
+      60.16268158
+    ],
+    "timestamp": 61320.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.954948425,
+      60.159553528000004
+    ],
+    "timestamp": 61440.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.910955429,
+      60.157447815
+    ],
+    "timestamp": 61560.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.933683395,
+      60.198036194
+    ],
+    "timestamp": 61680.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.926643371999997,
+      60.182258606000005
+    ],
+    "timestamp": 61740.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.927837372,
+      60.18196106
+    ],
+    "timestamp": 61800.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.898448944000002,
+      60.20318985
+    ],
+    "timestamp": 61860.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.898448944000002,
+      60.20318985
+    ],
+    "timestamp": 61980.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.947725295999998,
+      60.186515808
+    ],
+    "timestamp": 62040.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.928209305,
+      60.182048798000004
+    ],
+    "timestamp": 62100.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.95224762,
+      60.186969757
+    ],
+    "timestamp": 62160.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.912445068,
+      60.191402435
+    ],
+    "timestamp": 62280.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.966049194,
+      60.203006744
+    ],
+    "timestamp": 62340.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.944538116,
+      60.21037674
+    ],
+    "timestamp": 62400.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.941797255999997,
+      60.158058167
+    ],
+    "timestamp": 62520.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.931472778000003,
+      60.171115875
+    ],
+    "timestamp": 62580.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.964551926,
+      60.19336319
+    ],
+    "timestamp": 62640.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.945493698000003,
+      60.20816039999999
+    ],
+    "timestamp": 62700.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.902496338000002,
+      60.194972992
+    ],
+    "timestamp": 62760.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.902496338000002,
+      60.194972992
+    ],
+    "timestamp": 62880.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.953266144,
+      60.171829224
+    ],
+    "timestamp": 62940.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.915262222,
+      60.151298523
+    ],
+    "timestamp": 63000.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.909503936999997,
+      60.159179688
+    ],
+    "timestamp": 63060.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.926914215,
+      60.182029723999996
+    ],
+    "timestamp": 63120.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.915262222,
+      60.151298523
+    ],
+    "timestamp": 63180.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.931472778000003,
+      60.171115875
+    ],
+    "timestamp": 63300.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.942398071,
+      60.166183472
+    ],
+    "timestamp": 63360.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.911157608000003,
+      60.19114303600001
+    ],
+    "timestamp": 63420.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.927532195999998,
+      60.19619751
+    ],
+    "timestamp": 63900.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.87735939,
+      60.197925568
+    ],
+    "timestamp": 63960.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.929229736,
+      60.192581177
+    ],
+    "timestamp": 64020.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.919252395999997,
+      60.154071808000005
+    ],
+    "timestamp": 64080.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.919927596999997,
+      60.163574219
+    ],
+    "timestamp": 64140.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.909503936999997,
+      60.159179688
+    ],
+    "timestamp": 64200.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.92023468,
+      60.171783446999996
+    ],
+    "timestamp": 64320.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.960702896,
+      60.187633514
+    ],
+    "timestamp": 64380.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.956155777,
+      60.16917419399999
+    ],
+    "timestamp": 64440.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.943881989,
+      60.192909241
+    ],
+    "timestamp": 64500.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.94519043,
+      60.200065613
+    ],
+    "timestamp": 64560.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.921228409,
+      60.167339325
+    ],
+    "timestamp": 64680.0,
+    "notification": "message created"
+  },
+  {
+    "coordinates": [
+      24.947624206999997,
+      60.171882628999995
+    ],
+    "timestamp": 64800.0,
+    "notification": "message created"
   }
 ]

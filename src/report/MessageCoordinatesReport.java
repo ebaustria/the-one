@@ -20,5 +20,6 @@ public class MessageCoordinatesReport extends Report {
 		for (String s : report) {
 			write(s);
 		}
+		super.done();
 	}
 }
