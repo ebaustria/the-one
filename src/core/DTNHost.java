@@ -20,6 +20,9 @@ import movement.Path;
 import movement.TransitMapMovement;
 import movement.TransitStop;
 import movement.map.SimMap;
+import report.ArrivalCoordinatesReport;
+import report.LocalCoordinatesReport;
+import report.MessageCoordinatesReport;
 import routing.MessageRouter;
 import routing.util.RoutingInfo;
 //import sun.tools.tree.ThisExpression;
@@ -45,9 +48,6 @@ public class DTNHost implements Comparable<DTNHost> {
 	private double speed;
 	private double nextTimeToMove;
 	private String name;
-	private List<DeckMessageListener> dMsgListeners;
-	private List<DeckMovementListener> dMovListeners;
-	private List<ArrivalListener> arrListeners;
 	private List<MessageListener> msgListeners;
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
@@ -69,7 +69,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	 * @param mmProto Prototype of the movement model of this host
 	 * @param mRouterProto Prototype of the message router of this host
 	 */
-	public DTNHost(List<ArrivalListener> aLs, List<DeckMovementListener> dMovLs, List<DeckMessageListener> dMsgLs, List<MessageListener> msgLs,
+	public DTNHost(List<MessageListener> msgLs,
 			List<MovementListener> movLs,
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
@@ -92,9 +92,6 @@ public class DTNHost implements Comparable<DTNHost> {
 
 		this.msgListeners = msgLs;
 		this.movListeners = movLs;
-		this.dMsgListeners = dMsgLs;
-		this.dMovListeners = dMovLs;
-		this.arrListeners = aLs;
 
 		// create instances by replicating the prototypes
 		this.movement = mmProto.replicate();
@@ -450,7 +447,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			// A device will move, start the communication system
 			setCommunicationSystemON(true);
 			
-			writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
+			LocalCoordinatesReport.report.add(this.name + " " + untranslate().toString() + " " + SimClock.getTime() + " " + this.getNrofMessages());
 		}
 
 		possibleMovement = timeIncrement * speed;
@@ -460,11 +457,11 @@ public class DTNHost implements Comparable<DTNHost> {
 			// node can move past its next destination
 			this.location.setLocation(this.destination); // snap to destination
 			
-			writeWaypoint(this, untranslate().toString(), SimClock.getTime(), this.getNrofMessages());
+			LocalCoordinatesReport.report.add(this.name + " " + untranslate().toString() + " " + SimClock.getTime() + " " + this.getNrofMessages());
 			
 			possibleMovement -= distance;
 			if (!setNextWaypoint()) { // get a new waypoint
-				writeArrival(untranslate().toString(), SimClock.getTime());
+				ArrivalCoordinatesReport.report.add(untranslate().toString() + " " + SimClock.getTime());
 				this.destination = null; // No more waypoints left, therefore the destination must be null
 				return; // no more waypoints left
 			}
@@ -477,30 +474,6 @@ public class DTNHost implements Comparable<DTNHost> {
 		dy = (possibleMovement/distance) * (this.destination.getY() -
 				this.location.getY());
 		this.location.translate(dx, dy);
-	}
-
-	private void writeWaypoint(DTNHost dtnHost, String location, double time, int messages) {
-		if (dtnHost.dMovListeners != null) {
-			for (DeckMovementListener d : dtnHost.dMovListeners) {
-				d.atWaypoint(dtnHost, location, time, messages);
-			}
-		}
-	}
-	
-	private void writeArrival(String location, double time) {
-		if (this.arrListeners != null) {
-			for (ArrivalListener a : this.arrListeners) {
-				a.atStop(location, time);
-			}
-		}
-	}
-	
-	private void writeMessage(String location, double time, String action) {
-		if (this.dMsgListeners != null) {
-			for (DeckMessageListener d : this.dMsgListeners) {
-				d.writeMessage(location, time, action);
-			}
-		}
 	}
 
 	/**
@@ -540,7 +513,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		double x = this.location.getX() - this.offset.getX();
 		double y = this.location.getY() - this.offset.getY();
 		
-		if (TransitReader.isMirrored() == true) {
+		if (TransitReader.isMirrored() == true && y != 0) {
 			return new Coord(x, -y);
 		} else {
 			return new Coord(x, y);
@@ -622,7 +595,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		
 		// do not create messages if the communication system is turned off
 		if (isCommunicationSystemON()){
-			writeMessage(untranslate().toString(), SimClock.getTime(), "message created");
+			MessageCoordinatesReport.report.add(untranslate().toString() + " " + SimClock.getTime() + " " + "message created");
 			this.router.createNewMessage(m);
 		}
 	}

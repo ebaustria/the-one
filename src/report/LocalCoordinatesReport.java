@@ -1,11 +1,13 @@
 package report;
 
-import core.DTNHost;
-import core.DeckMovementListener;
+import java.util.LinkedList;
 
-public class LocalCoordinatesReport extends Report implements DeckMovementListener {
+public class LocalCoordinatesReport extends Report {
+	
+	public static LinkedList<String> report;
 	
 	public LocalCoordinatesReport() {
+		report = new LinkedList<String>();
 		init();
 	}
 	
@@ -14,8 +16,9 @@ public class LocalCoordinatesReport extends Report implements DeckMovementListen
 	}
 	
 	@Override
-	public void atWaypoint(DTNHost host, String location, double time, int messages) {
-		setPrefix(host.getName());
-		write(" " + location + " " + time + " " + messages);
+	public void done() {
+		for (String s : report) {
+			write(s);
+		}
 	}
 }

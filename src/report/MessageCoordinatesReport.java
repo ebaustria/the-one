@@ -1,19 +1,24 @@
 package report;
 
-import core.DeckMessageListener;
+import java.util.LinkedList;
 
-public class MessageCoordinatesReport extends Report implements DeckMessageListener {
+public class MessageCoordinatesReport extends Report {
+	
+	public static LinkedList<String> report;
 	
 	public MessageCoordinatesReport() {
+		report = new LinkedList<String>();
 		init();
 	}
 	
 	protected void init() {
 		super.init();
 	}
-
+	
 	@Override
-	public void writeMessage(String location, double time, String action) {
-		write(location + " " + time + " " + action);
+	public void done() {
+		for (String s : report) {
+			write(s);
+		}
 	}
 }

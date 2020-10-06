@@ -1,19 +1,24 @@
 package report;
 
-import core.ArrivalListener;
+import java.util.LinkedList;
 
-public class ArrivalCoordinatesReport extends Report implements ArrivalListener {
+public class ArrivalCoordinatesReport extends Report {
+	
+	public static LinkedList<String> report;
 	
 	public ArrivalCoordinatesReport() {
+		report = new LinkedList<String>();
 		init();
 	}
 	
 	protected void init() {
 		super.init();
 	}
-
+	
 	@Override
-	public void atStop(String location, double time) {
-		write(location + " " + time);
+	public void done() {
+		for (String s : report) {
+			write(s);
+		}
 	}
 }

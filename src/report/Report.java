@@ -129,6 +129,14 @@ public abstract class Report {
 
 		checkDirExistence(outFileName);
 	}
+	
+	public double getLastReportTime() {
+		return this.lastReportTime;
+	}
+	
+	public double getOutputInterval() {
+		return this.outputInterval;
+	}
 
 	/**
 	 * Checks that a directory for a file exists or creates the directory
