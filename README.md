@@ -30,7 +30,7 @@ In order to visualize public transit in deck.gl, it is necessary to create a fil
 
 ## regiaoSul
 
-If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/json```, create and activate a virtual environment, install the dependencies, and run readMap.py:
+If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/json```, create and activate a virtual environment, and install the dependencies:
 
 ```
 cd toolkit/json
@@ -38,6 +38,12 @@ python3 -m venv --without-pip .venv
 curl -sS https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Navigate to ```the-one/toolkit/json/longDistance``` and run readMap.py:
+
+```
+cd longDistance
 python3 -m readMap
 ```
 
@@ -81,8 +87,8 @@ Running ```scenario.py``` creates the files that are needed to run the simulatio
 After creating the mapping of local coordinates to GPS coordinates, navigate to the-one and run the simulation:
 
 <pre>
-cd ..
-cd ..
+cd
+cd <i>your_path_to</i>/the-one
 ./one.sh <i>your_map</i>_settings.txt
 </pre>
 
