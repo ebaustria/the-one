@@ -51,5 +51,5 @@ def make_routes(gps_coords: str, scenario: str) -> None:
 
     routes_json = json.dumps(route_list, indent=2)
 
-    with open("json_arrays/" + scenario + "/routes.json", "w") as file:
+    with open("toolkit/json/json_arrays/" + scenario + "/routes.json", "w") as file:
         file.write(routes_json)

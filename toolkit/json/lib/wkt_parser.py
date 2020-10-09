@@ -8,7 +8,6 @@ def parse_wkt_route(nodes: str, coords) -> List[List[float]]:
     nodes = nodes.split(',')
 
     for node in nodes:
-        #node = node.strip(')')
         node = node.split()
         node[0] = float(node[0])
         node[1] = float(node[1])

@@ -1,3 +1,4 @@
+from typing import Dict
 import xml.etree.ElementTree as ET
 from lib.project import Projector
 from lib import writer
@@ -6,6 +7,24 @@ import datetime
 from datetime import timedelta
 from datetime import datetime
 import pprint
+import csv
+
+
+def write_local_and_gps(p: Projector, routes: Dict) -> None:
+    main_local_to_gps = set()
+
+    for r_n in routes.keys():
+        ns = routes[r_n]['nodes']
+        s = routes[r_n]['stops']
+
+        for key, value in sorted(p.local_to_gps.items()):
+            if value in ns or value in s:
+                main_local_to_gps.add((key, value))
+
+    with open("regiaoSul_gps_coordinates.csv", 'w') as f:
+        writer = csv.writer(f)
+        for local, gps in sorted(main_local_to_gps):
+            writer.writerow([local, gps])
 
 
 def get_name_from_file(fname):
@@ -131,4 +150,4 @@ for route_name in routes_latlon.keys():
     writer.write_csv_stops(coords=stops_xy[route_name]['stops'], durations=[30 for _ in range(len(stops_xy[route_name]['stops']))], file=stops_file)
 #print(routes_xy)
 
-writer.write_local_and_gps(proj, routes_latlon)
+write_local_and_gps(p=proj, routes=routes_latlon)

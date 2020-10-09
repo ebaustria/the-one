@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 RSUL="regiaoSul"
 LOCAL_REPORT=$1_LocalCoordinatesReport.txt
@@ -11,7 +12,7 @@ ARRIVALS=reports/$ARRIVAL_REPORT
 MESSAGES=reports/$MESSAGES_REPORT
 
 if [ $1 = "$RSUL" ]; then
-  GPS_COORDS=toolkit/json/$GPS_MAP
+  GPS_COORDS=toolkit/json/longDistance/$GPS_MAP
 else
   GPS_COORDS=toolkit/gtfs/$GPS_MAP
 fi
@@ -20,14 +21,16 @@ STATIONS=data/$1/stations.wkt
 CITIES=data/$1/cities.wkt
 
 rm -rf toolkit/json/routes/*
+rm -rf toolkit/json/stops/*
 sudo cp data/$1/*_nodes.wkt toolkit/json/routes/
-sudo cp $STATIONS toolkit/json/
+sudo cp $STATIONS toolkit/json/stops/
 
 if test -f "$CITIES"; then
-  sudo cp $CITIES toolkit/json/
+  sudo cp $CITIES toolkit/json/stops/
 fi
 
-mkdir -p json_arrays/$1
+#Might not be necessary?
+mkdir -p toolkit/json/json_arrays/$1
 
 chmod u+x toolkit/json/json_generator.py
 

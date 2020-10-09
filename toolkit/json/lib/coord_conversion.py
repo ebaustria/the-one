@@ -128,5 +128,5 @@ def write_json(json_list: List[Dict], scenario: str) -> None:
 
     json_file = json.dumps(json_list, indent=2)
 
-    with open("json_arrays/" + scenario + "/trips.json", "w") as file:
+    with open("toolkit/json/json_arrays/" + scenario + "/trips.json", "w") as file:
         file.write(json_file)

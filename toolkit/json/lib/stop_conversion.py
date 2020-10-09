@@ -26,12 +26,12 @@ def make_stops(gps_coordinates: str, scenario: str) -> None:
     cities_list = []
     coords_list = cc.gps_list(gps_coordinates)
 
-    with open("toolkit/json/stations.wkt", 'r') as stations:
+    with open("toolkit/json/stops/stations.wkt", 'r') as stations:
         stations = stations.readlines()
         stations = wkt.parse_wkt_stops(stations)
 
     if path.exists("data/" + scenario + "/cities.wkt"):
-        with open("toolkit/json/cities.wkt", 'r') as cities:
+        with open("toolkit/json/stops/cities.wkt", 'r') as cities:
             cities = cities.readlines()
             cities = wkt.parse_wkt_stops(cities)
 
@@ -48,5 +48,5 @@ def make_stops(gps_coordinates: str, scenario: str) -> None:
 
     stops_json = json.dumps(result, indent=2)
 
-    with open("json_arrays/" + scenario + "/stops.json", "w") as file:
+    with open("toolkit/json/json_arrays/" + scenario + "/stops.json", "w") as file:
         file.write(stops_json)
