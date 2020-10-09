@@ -20,12 +20,12 @@ const DATA_URL = {
   //  'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/buildings.json', // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json' // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/ebaustria/coord_conversion/master/one_trace.json',
-  ROUTES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/routes_brazil.json',
-  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/messages.json',
-  TRIPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/trips.json',
-  STOPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/stops_final.json',
-  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/arrivals.json'
-  //CARRIED: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/carried_messages.json'
+  ROUTES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/routes.json',
+  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/messages.json',
+  TRIPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/trips.json',
+  STOPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/stops.json',
+  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/arrivals.json',
+  //CARRIED: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/messages/trips.json'
 };
 
 //var text_vis = 0;
@@ -63,9 +63,9 @@ const DEFAULT_THEME = {
 };
 
 const INITIAL_VIEW_STATE = {
-  longitude: -52.789164,
-  latitude: -31.832282,
-  zoom: 9,
+  longitude: 7.841710,
+  latitude: 47.995712,
+  zoom: 12,
   pitch: 45,
   bearing: 0
 };
@@ -92,8 +92,8 @@ export default class App extends Component {
 
   _animate() {
     const {
-      loopLength = 604800, // unit corresponds to the timestamp in source data
-      animationSpeed = 60 // unit time per second
+      loopLength = 64800, // unit corresponds to the timestamp in source data
+      animationSpeed = 30 // unit time per second
     } = this.props;
     const timestamp = Date.now() / 1000;
     const loopTime = loopLength / animationSpeed;
@@ -112,7 +112,7 @@ export default class App extends Component {
       arrivals = DATA_URL.ARRIVALS,
       messages = DATA_URL.MESSAGES,
       //carried_messages = DATA_URL.CARRIED,
-      trailLength = 720,
+      trailLength = 120,
       theme = DEFAULT_THEME
     } = this.props;
 
@@ -132,13 +132,13 @@ export default class App extends Component {
         radiusMinPixels: 0,
         radiusMaxPixels: 100,
         getPosition: d => d.coordinates,
-        getRadius: d => isVisible(d.timestamp, this.state.time, 100, 500),
+        getRadius: d => isVisible(d.timestamp, this.state.time, 10, 25),
         getFillColor: d => [253, 128, 93],
         getLineColor: d => [0, 0, 0],
         currentTime: this.state.time,
         getTimestamps: d => d.timestamp,
         updateTriggers: {
-          getRadius: [d => isVisible(d.timestamp, this.state.time, 100, 500)]
+          getRadius: [d => isVisible(d.timestamp, this.state.time, 10, 25)]
         },
         transitions: {
           getRadius: {
@@ -190,6 +190,30 @@ export default class App extends Component {
         id: 'carried_messages',
         data: carried_messages,
         pickable: false,
+        getPosition: d => d.path[0],
+        getText: d => "0", //d.messages[0],
+        getSize: 20,
+        getAngle: 0,
+        getColor: [0, 0, 0], //d => [(Number(d.messages) * 3), 0, 0, isVisible(d.timestamp, this.state.time, 5, 255)],
+        //backgroundColor: [255, 255, 255],
+        getTextAnchor: 'middle',
+        getAlignmentBaseline: 'top',
+        getPixelOffset: [0, 3],
+        updateTriggers: {
+          getColor: [d => [(Number(d.messages) * 3), 0, 0, isVisible(d.timestamp, this.state.time, 5, 255)]]
+        }
+        transitions: {
+          getPosition: {
+            duration: 100
+          }
+        }
+      }),
+      */
+      /*
+      new TextLayer({
+        id: 'carried_messages',
+        data: carried_messages,
+        pickable: false,
         getPosition: d => d.coordinates,
         getText: d => d.messages,
         getSize: 20,
@@ -210,13 +234,13 @@ export default class App extends Component {
         getPosition: d => d.coordinates,
         getText: d => d.notification,
         getSize: 16,
-        getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 50, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 50, 255)]),
+        getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)]),
         backgroundColor: [255, 255, 255],
         getTextAnchor: 'middle',
         getAlignmentBaseline: 'top',
         getPixelOffset: [0, 3],
         updateTriggers: {
-          getColor: [d => [0, 0, 0, isVisible(d.timestamp, this.state.time, 50, 255)]]
+          getColor: [d => isVisible(d.timestamp, this.state.time, 30, 255)]
         }
         /*
         transitions: {
@@ -224,7 +248,7 @@ export default class App extends Component {
             type: 'spring',
             stiffness: 0.01,
             damping: 0.15,
-            duration: 200
+            duration: 20
             //enter: d => [255]
           }
         }

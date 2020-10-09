@@ -20,11 +20,11 @@ const DATA_URL = {
   //  'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/buildings.json', // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json' // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/ebaustria/coord_conversion/master/one_trace.json',
-  ROUTES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/routes.json',
-  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/messages.json',
-  TRIPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/trips.json',
-  STOPS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/stops.json',
-  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/master/arrivals.json',
+  ROUTES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/helsinki1/routes.json',
+  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/helsinki1/messages.json',
+  TRIPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/helsinki1/trips.json',
+  STOPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/helsinki1/stops.json',
+  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/helsinki1/arrivals.json',
   //CARRIED: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/messages/trips.json'
 };
 
@@ -63,8 +63,8 @@ const DEFAULT_THEME = {
 };
 
 const INITIAL_VIEW_STATE = {
-  longitude: 7.841710,
-  latitude: 47.995712,
+  longitude: 24.941132,
+  latitude: 60.168539,
   zoom: 12,
   pitch: 45,
   bearing: 0
@@ -234,13 +234,13 @@ export default class App extends Component {
         getPosition: d => d.coordinates,
         getText: d => d.notification,
         getSize: 16,
-        getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 75, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 75, 255)]),
+        getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)]),
         backgroundColor: [255, 255, 255],
         getTextAnchor: 'middle',
         getAlignmentBaseline: 'top',
         getPixelOffset: [0, 3],
         updateTriggers: {
-          getColor: [d => isVisible(d.timestamp, this.state.time, 75, 255)]
+          getColor: [d => isVisible(d.timestamp, this.state.time, 30, 255)]
         }
         /*
         transitions: {
