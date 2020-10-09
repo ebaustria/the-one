@@ -80,7 +80,9 @@ pip install -r requirements.txt
 python3 scenario.py -t 0 maps/<i>your_map</i>/gtfs-out/<i>your_map</i>.zip
 </pre>
 
-Running ```scenario.py``` creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>. This file contains the mapping of local coordinates to GPS coordinates.
+Running ```scenario.py``` creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>
+
+This file contains the mapping of local coordinates to GPS coordinates.
 
 ## Running the-ONE
 
