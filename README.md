@@ -123,7 +123,7 @@ deck.gl uses special classes called layers to visualize datasets. Each layer cla
 
 Open deck.gl/examples/website/trips/app.js. We need to modify app.js to get it to visualize our data.
 
-Note: A functioning version of app.js for the regiaoSul scenario is located in ```the-one/toolkit/json``` and can be consulted for an example. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with the version of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
+**Note**: Functioning versions of app.js are located in ```the-one/toolkit/json/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
 
 First, make sure the necessary layer classes are imported at the top of the file:
 
