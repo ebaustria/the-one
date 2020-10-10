@@ -51,7 +51,7 @@ On line 134, ```readMap.py``` writes a file called ```regiaoSul_gps_coordinates.
 
 ## Short-Distance Scenarios
 
-Navigate to ```the-one/toolkit/gtfs``` and prepare a map for one of the scenarios in ```the-one/toolkit/gtfs/map_definitions```:
+If you want to visualize a short-distance scenario, navigate to ```the-one/toolkit/gtfs``` and prepare a map for one of the scenarios in ```the-one/toolkit/gtfs/map_definitions```:
 
 <pre>
 cd toolkit/gtfs
