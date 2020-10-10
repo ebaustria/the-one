@@ -98,9 +98,10 @@ cd <i>your_path_to</i>/the-one
 
 ## Creating JSON Files
 
-While still in the-one, run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```.
+While still in the-one, install the dependencies for ```the-one/toolkit/json``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/json/json_arrays/<i>your_map</i></pre>.
 
 <pre>
+pip install -r toolkit/json/requirements.txt
 ./prepare_json.sh <i>your_map</i>
 </pre>
 
