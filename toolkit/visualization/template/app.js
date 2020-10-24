@@ -11,26 +11,26 @@ import {IconLayer} from '@deck.gl/layers';
 import {TextLayer} from '@deck.gl/layers';
 import {ScatterplotLayer} from '@deck.gl/layers';
 
-const routes = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/routes.json';
-const messages = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/messages.json';
-const trips = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/trips.json';
-const stops = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/stops.json';
-const arrivals = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/arrivals.json';
+const MAPBOX_TOKEN = "pk.eyJ1IjoiZXJpY2J1c2giLCJhIjoiY2thcXVzMGszMmJhZjMxcDY2Y2FrdXkwMSJ9.cwBqtbXpWJbtAEGli1AIIg";
+
+const r = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/routes.json';
+const m = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/messages.json';
+const t = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/trips.json';
+const s = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/stops.json';
+const a = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/arrivals.json';
 const s_zoom = 12;
 const loop_l = 64800;
 const trail_l = 120;
-const animation_s = 10;
+const animation_s = 2;
 const lon = 7.841710;
 const lat = 47.995712;
 
-const MAPBOX_TOKEN = "pk.eyJ1IjoiZXJpY2J1c2giLCJhIjoiY2thcXVzMGszMmJhZjMxcDY2Y2FrdXkwMSJ9.cwBqtbXpWJbtAEGli1AIIg";
-
 const DATA_URL = {
-  ROUTES: routes,
-  MESSAGES: messages,
-  TRIPS: trips,
-  STOPS: stops,
-  ARRIVALS: arrivals
+  ROUTES: r,
+  MESSAGES: m,
+  TRIPS: t,
+  STOPS: s,
+  ARRIVALS: a
 };
 
 const ICON_MAPPING = {
@@ -76,8 +76,11 @@ const INITIAL_VIEW_STATE = {
 const landCover = [[[-74.0, 40.7], [-74.02, 40.7], [-74.02, 40.72], [-74.0, 40.72]]];
 
 export default function App({
-  buildings = DATA_URL.BUILDINGS,
+  stops = DATA_URL.STOPS,
+  routes = DATA_URL.ROUTES,
   trips = DATA_URL.TRIPS,
+  arrivals = DATA_URL.ARRIVALS,
+  messages = DATA_URL.MESSAGES,
   trailLength = trail_l,
   initialViewState = INITIAL_VIEW_STATE,
   mapStyle = 'mapbox://styles/mapbox/dark-v9',
@@ -117,13 +120,13 @@ export default function App({
       radiusMinPixels: 0,
       radiusMaxPixels: 100,
       getPosition: d => d.coordinates,
-      getRadius: d => isVisible(d.timestamp, this.state.time, 10, 25),
+      getRadius: d => isVisible(d.timestamp, time, 10, 25),
       getFillColor: d => [253, 128, 93],
       getLineColor: d => [0, 0, 0],
-      currentTime: this.state.time,
+      currentTime: time,
       getTimestamps: d => d.timestamp,
       updateTriggers: {
-        getRadius: [d => isVisible(d.timestamp, this.state.time, 10, 25)]
+        getRadius: [d => isVisible(d.timestamp, time, 10, 25)]
       },
       transitions: {
         getRadius: {
@@ -153,7 +156,7 @@ export default function App({
       widthMinPixels: 3,
       rounded: true,
       trailLength,
-      currentTime: this.state.time,
+      currentTime: time,
       getWidth: 3,
       shadowEnabled: false
     }),
@@ -176,13 +179,13 @@ export default function App({
       getPosition: d => d.coordinates,
       getText: d => d.notification,
       getSize: 16,
-      getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)]),
+      getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, time, 30, 255)] : [0, 0, 0, isVisible(d.timestamp, time, 30, 255)]),
       backgroundColor: [255, 255, 255],
       getTextAnchor: 'middle',
       getAlignmentBaseline: 'top',
       getPixelOffset: [0, 3],
       updateTriggers: {
-        getColor: [d => isVisible(d.timestamp, this.state.time, 30, 255)]
+        getColor: [d => isVisible(d.timestamp, time, 30, 255)]
       }
       /*
       transitions: {
