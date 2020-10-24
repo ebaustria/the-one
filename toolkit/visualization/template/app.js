@@ -6,6 +6,10 @@ import {AmbientLight, PointLight, LightingEffect} from '@deck.gl/core';
 import DeckGL from '@deck.gl/react';
 import {PolygonLayer} from '@deck.gl/layers';
 import {TripsLayer} from '@deck.gl/geo-layers';
+import {PathLayer} from '@deck.gl/layers';
+import {IconLayer} from '@deck.gl/layers';
+import {TextLayer} from '@deck.gl/layers';
+import {ScatterplotLayer} from '@deck.gl/layers';
 
 const routes = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/routes.json';
 const messages = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/messages.json';
