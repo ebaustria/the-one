@@ -12,7 +12,7 @@ ARRIVALS=reports/$ARRIVAL_REPORT
 MESSAGES=reports/$MESSAGES_REPORT
 
 if [ $1 = "$RSUL" ]; then
-  GPS_COORDS=toolkit/json/longDistance/$GPS_MAP
+  GPS_COORDS=toolkit/visualization/longDistance/$GPS_MAP
 else
   GPS_COORDS=toolkit/gtfs/$GPS_MAP
 fi
@@ -20,18 +20,18 @@ fi
 STATIONS=data/$1/stations.wkt
 CITIES=data/$1/cities.wkt
 
-rm -rf toolkit/json/routes/*
-rm -rf toolkit/json/stops/*
-sudo cp data/$1/*_nodes.wkt toolkit/json/routes/
-sudo cp $STATIONS toolkit/json/stops/
+rm -rf toolkit/visualization/routes/*
+rm -rf toolkit/visualization/stops/*
+sudo cp data/$1/*_nodes.wkt toolkit/visualization/routes/
+sudo cp $STATIONS toolkit/visualization/stops/
 
 if test -f "$CITIES"; then
-  sudo cp $CITIES toolkit/json/stops/
+  sudo cp $CITIES toolkit/visualization/stops/
 fi
 
 #Might not be necessary?
-mkdir -p toolkit/json/json_arrays/$1
+mkdir -p toolkit/visualization/json_arrays/$1
 
-chmod u+x toolkit/json/json_generator.py
+chmod u+x toolkit/visualization/json_generator.py
 
-python3 toolkit/json/json_generator.py $LOCAL_COORDS $GPS_COORDS $ARRIVALS $MESSAGES $1
+python3 toolkit/visualization/json_generator.py $LOCAL_COORDS $GPS_COORDS $ARRIVALS $MESSAGES $1

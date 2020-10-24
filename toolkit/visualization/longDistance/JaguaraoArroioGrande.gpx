@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creator="Graphhopper version f738fdfc4371477dfe39f433b7802f9f6348627a" version="1.1" xmlns:gh="https://graphhopper.com/public/schema/gpx/1.1">
+<metadata><copyright author="OpenStreetMap contributors"/><link href="http://graphhopper.com"><text>GraphHopper GPX</text></link><time>2020-06-25T09:22:58Z</time></metadata>
+<wpt lat="-32.566474" lon="-53.376976"> <name>Rua 27 de Janeiro</name></wpt>
+<wpt lat="-32.238502" lon="-53.086325"> <name>Ziel erreicht</name></wpt>
+<rte>
+<rtept lat="-32.566474" lon="-53.376976"><desc>dem Straßenverlauf von Rua 27 de Janeiro folgen</desc><extensions><gh:distance>2.9</gh:distance><gh:time>371</gh:time><gh:direction>SE</gh:direction><gh:azimuth>149.5</gh:azimuth><gh:sign>0</gh:sign></extensions></rtept>
+<rtept lat="-32.566496" lon="-53.376961"><desc>rechts abbiegen auf Rua Barão do Rio Branco</desc><extensions><gh:distance>309.1</gh:distance><gh:time>46369</gh:time><gh:direction>SW</gh:direction><gh:azimuth>237.96</gh:azimuth><gh:sign>2</gh:sign></extensions></rtept>
+<rtept lat="-32.567985" lon="-53.379744"><desc>rechts abbiegen auf Rua Uruguai, BR-116</desc><extensions><gh:distance>1590.9</gh:distance><gh:time>106042</gh:time><gh:direction>NW</gh:direction><gh:azimuth>332.83</gh:azimuth><gh:sign>2</gh:sign></extensions></rtept>
+<rtept lat="-32.555373" lon="-53.387725"><desc>scharf rechts abbiegen auf Rodovia General Bento Gonçalves, BR-116</desc><extensions><gh:distance>45538.5</gh:distance><gh:time>1754562</gh:time><gh:direction>E</gh:direction><gh:azimuth>85.54</gh:azimuth><gh:sign>3</gh:sign></extensions></rtept>
+<rtept lat="-32.246235" lon="-53.07153"><extensions><gh:distance>915.4</gh:distance><gh:time>45763</gh:time><gh:direction>N</gh:direction><gh:azimuth>0.73</gh:azimuth><gh:sign>-7</gh:sign></extensions></rtept>
+<rtept lat="-32.241161" lon="-53.078767"><desc>links abbiegen auf Rua Baltazar Chagas</desc><extensions><gh:distance>14.4</gh:distance><gh:time>1856</gh:time><gh:direction>S</gh:direction><gh:azimuth>196.57</gh:azimuth><gh:sign>-2</gh:sign></extensions></rtept>
+<rtept lat="-32.241286" lon="-53.078811"><desc>rechts abbiegen auf Rua Basílio Conceição</desc><extensions><gh:distance>762.1</gh:distance><gh:time>38098</gh:time><gh:direction>W</gh:direction><gh:azimuth>285.74</gh:azimuth><gh:sign>2</gh:sign></extensions></rtept>
+<rtept lat="-32.239426" lon="-53.08661"><desc>rechts abbiegen auf Rua Doutor Monteiro</desc><extensions><gh:distance>106.3</gh:distance><gh:time>13662</gh:time><gh:direction>N</gh:direction><gh:azimuth>14.6</gh:azimuth><gh:sign>2</gh:sign></extensions></rtept>
+<rtept lat="-32.238502" lon="-53.086325"><extensions><gh:distance>0.0</gh:distance><gh:time>0</gh:time><gh:sign>4</gh:sign></extensions></rtept>
+</rte>
+<trk><name>GraphHopper Track</name><trkseg>
+<trkpt lat="-32.566474" lon="-53.376976"><time>2020-06-25T09:22:58Z</time></trkpt>
+<trkpt lat="-32.566496" lon="-53.376961"><time>2020-06-25T09:22:59Z</time></trkpt>
+<trkpt lat="-32.567424" lon="-53.378721"></trkpt>
+<trkpt lat="-32.567985" lon="-53.379744"><time>2020-06-25T09:23:45Z</time></trkpt>
+<trkpt lat="-32.5655" lon="-53.381258"></trkpt>
+<trkpt lat="-32.563098" lon="-53.382744"></trkpt>
+<trkpt lat="-32.561503" lon="-53.383773"></trkpt>
+<trkpt lat="-32.560999" lon="-53.384078"></trkpt>
+<trkpt lat="-32.560762" lon="-53.384307"></trkpt>
+<trkpt lat="-32.556655" lon="-53.386894"></trkpt>
+<trkpt lat="-32.555373" lon="-53.387725"><time>2020-06-25T09:25:31Z</time></trkpt>
+<trkpt lat="-32.555363" lon="-53.387581"></trkpt>
+<trkpt lat="-32.554613" lon="-53.386388"></trkpt>
+<trkpt lat="-32.553953" lon="-53.385477"></trkpt>
+<trkpt lat="-32.5539" lon="-53.385449"></trkpt>
+<trkpt lat="-32.552179" lon="-53.382903"></trkpt>
+<trkpt lat="-32.550316" lon="-53.380142"></trkpt>
+<trkpt lat="-32.548692" lon="-53.377616"></trkpt>
+<trkpt lat="-32.541319" lon="-53.366693"></trkpt>
+<trkpt lat="-32.539463" lon="-53.364162"></trkpt>
+<trkpt lat="-32.538492" lon="-53.362878"></trkpt>
+<trkpt lat="-32.536896" lon="-53.360868"></trkpt>
+<trkpt lat="-32.534963" lon="-53.358546"></trkpt>
+<trkpt lat="-32.52811" lon="-53.350923"></trkpt>
+<trkpt lat="-32.499061" lon="-53.318922"></trkpt>
+<trkpt lat="-32.495606" lon="-53.315363"></trkpt>
+<trkpt lat="-32.471821" lon="-53.291335"></trkpt>
+<trkpt lat="-32.469358" lon="-53.288887"></trkpt>
+<trkpt lat="-32.466636" lon="-53.286599"></trkpt>
+<trkpt lat="-32.459445" lon="-53.28081"></trkpt>
+<trkpt lat="-32.457432" lon="-53.279038"></trkpt>
+<trkpt lat="-32.456146" lon="-53.277649"></trkpt>
+<trkpt lat="-32.454286" lon="-53.275285"></trkpt>
+<trkpt lat="-32.452458" lon="-53.272836"></trkpt>
+<trkpt lat="-32.449458" lon="-53.268976"></trkpt>
+<trkpt lat="-32.447183" lon="-53.266454"></trkpt>
+<trkpt lat="-32.406387" lon="-53.225278"></trkpt>
+<trkpt lat="-32.369611" lon="-53.188194"></trkpt>
+<trkpt lat="-32.328021" lon="-53.14635"></trkpt>
+<trkpt lat="-32.327058" lon="-53.14548"></trkpt>
+<trkpt lat="-32.326455" lon="-53.144986"></trkpt>
+<trkpt lat="-32.289224" lon="-53.115984"></trkpt>
+<trkpt lat="-32.288374" lon="-53.115259"></trkpt>
+<trkpt lat="-32.28425" lon="-53.111037"></trkpt>
+<trkpt lat="-32.263659" lon="-53.089693"></trkpt>
+<trkpt lat="-32.259179" lon="-53.084961"></trkpt>
+<trkpt lat="-32.256134" lon="-53.081801"></trkpt>
+<trkpt lat="-32.255185" lon="-53.080849"></trkpt>
+<trkpt lat="-32.246235" lon="-53.07153"><time>2020-06-25T09:54:46Z</time></trkpt>
+<trkpt lat="-32.246037" lon="-53.071527"></trkpt>
+<trkpt lat="-32.245908" lon="-53.071565"></trkpt>
+<trkpt lat="-32.245719" lon="-53.071668"></trkpt>
+<trkpt lat="-32.244606" lon="-53.072532"></trkpt>
+<trkpt lat="-32.244052" lon="-53.073078"></trkpt>
+<trkpt lat="-32.243855" lon="-53.073241"></trkpt>
+<trkpt lat="-32.243548" lon="-53.073752"></trkpt>
+<trkpt lat="-32.242718" lon="-53.075362"></trkpt>
+<trkpt lat="-32.242307" lon="-53.076221"></trkpt>
+<trkpt lat="-32.241161" lon="-53.078767"><time>2020-06-25T09:55:31Z</time></trkpt>
+<trkpt lat="-32.241286" lon="-53.078811"><time>2020-06-25T09:55:33Z</time></trkpt>
+<trkpt lat="-32.239426" lon="-53.08661"><time>2020-06-25T09:56:11Z</time></trkpt>
+<trkpt lat="-32.238502" lon="-53.086325"><time>2020-06-25T09:56:25Z</time></trkpt>
+</trkseg>
+</trk>
+</gpx>
