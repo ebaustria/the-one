@@ -7,19 +7,37 @@ For introduction and releases, see [the ONE homepage at GitHub](http://akeranen.
 For instructions on how to get started, see [the README](https://github.com/akeranen/the-one/wiki/README).
 
 The [wiki page](https://github.com/akeranen/the-one/wiki) has the latest information.
+# Requirements
 
-# Visualizing Simulations from the-ONE
+* Python 3.4+
+* cmake
+* gcc >= 4.9 (or clang >= 5.0)
+
+# Getting Started
 
 First, clone the necessary repositories:
 
 ```
 git clone https://github.com/ebaustria/deck.gl.git
 git clone https://github.com/ebaustria/the-one.git
+git clone --recurse-submodules https://github.com/ad-freiburg/pfaedle
+```
+
+Build and install pfaedle:
+
+```
+cd pfaedle
+mkdir build && cd build
+cmake ..
+make -j
+make install
 ```
 
 Navigate to ```the-one``` and compile the program:
 
 ```
+cd ../..
+cd ..
 cd the-one
 ./compile.sh
 ```
@@ -28,6 +46,7 @@ cd the-one
 
 In order to visualize public transit in deck.gl, it is necessary to create a file that maps local coordinates (used in the-ONE) to GPS coordinates. There are two ways to do this depending on whether you are visualizing regiaoSul or a short-distance scenario.
 
+# Visualizing Simulations from the-ONE
 ## regiaoSul
 
 If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/json```, create and activate a virtual environment, and install the dependencies:
@@ -51,36 +70,18 @@ On line 134, ```readMap.py``` writes a file called ```regiaoSul_gps_coordinates.
 
 ## Short-Distance Scenarios
 
-Navigate to ```the-one/toolkit/gtfs``` and prepare a map for one of the scenarios in ```the-one/toolkit/gtfs/map_definitions```:
+If you want to visualize a short-distance scenario, navigate to ```the-one/toolkit/gtfs```, create the following virtual environment, and install the dependencies. Then, prepare a map for one of the scenarios in ```the-one/toolkit/gtfs/map_definitions``` (e.g. freiburg1 or helsinki1):
 
 <pre>
 cd toolkit/gtfs
+python3 -m venv --without-pip venv
+curl -sS https://bootstrap.pypa.io/get-pip.py | venv/bin/python
+source venv/bin/activate
+pip install -r requirements.txt
 ./prepare_map.sh <i>your_map_definition</i>
 </pre>
 
-Next, navigate to the map you just created, create the GTFS files for the map, navigate to the output directory, and compress the files into a zip drive:
-
-<pre>
-cd maps/<i>your_map</i>
-pfaedle -D -m tram -x ./<i>your_map</i>.osm .
-cd gtfs-out
-zip <i>your_map</i>.zip *
-</pre>
-
-Navigate back to ```the-one/toolkit/gtfs```, create a virtual environment, install the dependencies, and run ```scenario.py``` using the zip drive you just made as an argument:
-
-<pre>
-cd ..
-cd ..
-cd ..
-python3 -m venv --without-pip .venv
-curl -sS https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
-source .venv/bin/activate
-pip install -r requirements.txt
-python3 scenario.py -t 0 maps/<i>your_map</i>/gtfs-out/<i>your_map</i>.zip
-</pre>
-
-Running ```scenario.py``` creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>
+Allow the script to run until it reaches step 4 (Compile). In step 3, the script creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>
 
 This file contains the mapping of local coordinates to GPS coordinates.
 
@@ -89,8 +90,7 @@ This file contains the mapping of local coordinates to GPS coordinates.
 After creating the mapping of local coordinates to GPS coordinates, navigate to the-one and run the simulation:
 
 <pre>
-cd
-cd <i>your_path_to</i>/the-one
+cd ../..
 ./one.sh <i>your_map</i>_settings.txt
 </pre>
 
@@ -98,9 +98,10 @@ cd <i>your_path_to</i>/the-one
 
 ## Creating JSON Files
 
-While still in the-one, run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```.
+While still in the-one, install the dependencies for ```the-one/toolkit/json``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/json/json_arrays/<i>your_map</i></pre>
 
 <pre>
+pip install -r toolkit/json/requirements.txt
 ./prepare_json.sh <i>your_map</i>
 </pre>
 
@@ -123,7 +124,7 @@ deck.gl uses special classes called layers to visualize datasets. Each layer cla
 
 Open deck.gl/examples/website/trips/app.js. We need to modify app.js to get it to visualize our data.
 
-Note: A functioning version of app.js for the regiaoSul scenario is located in ```the-one/toolkit/json``` and can be consulted for an example. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with the version of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
+**Note**: Functioning versions of app.js are located in ```the-one/toolkit/json/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
 
 First, make sure the necessary layer classes are imported at the top of the file:
 
