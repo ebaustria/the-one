@@ -3,11 +3,11 @@ import sys
 
 def define_constants(scen, d):
 
-    d[9] = 'const routes = "https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/' + scen + '/routes.json";\n'
-    d[10] = 'const messages = "https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/' + scen + '/messages.json";\n'
-    d[11] = 'const trips = "https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/' + scen + '/trips.json";\n'
-    d[12] = 'const stops = "https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/' + scen + '/stops.json";\n'
-    d[13] = 'const arrivals = "https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/' + scen + '/arrivals.json";\n'
+    d[9] = "const routes = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/" + scen + "/routes.json';\n"
+    d[10] = "const messages = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/" + scen + "/messages.json';\n"
+    d[11] = "const trips = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/" + scen + "/trips.json';\n"
+    d[12] = "const stops = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/" + scen + "/stops.json';\n"
+    d[13] = "const arrivals = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/" + scen + "/arrivals.json';\n"
 
     if scen == 'freiburg1' or scen == 'helsinki1' or scen == 'prague1':
         d[14] = 'const s_zoom = 12;\n'
