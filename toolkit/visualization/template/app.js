@@ -15,9 +15,11 @@ const arrivals = 'https://raw.githubusercontent.com/ebaustria/the-one/master/too
 const s_zoom = 12;
 const loop_l = 64800;
 const trail_l = 120;
-const animation_s = 30;
+const animation_s = 10;
 const lon = 7.841710;
 const lat = 47.995712;
+
+const MAPBOX_TOKEN = "pk.eyJ1IjoiZXJpY2J1c2giLCJhIjoiY2thcXVzMGszMmJhZjMxcDY2Y2FrdXkwMSJ9.cwBqtbXpWJbtAEGli1AIIg";
 
 const DATA_URL = {
   ROUTES: routes,
@@ -25,6 +27,10 @@ const DATA_URL = {
   TRIPS: trips,
   STOPS: stops,
   ARRIVALS: arrivals
+};
+
+const ICON_MAPPING = {
+  marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
 };
 
 const ambientLight = new AmbientLight({
@@ -100,30 +106,91 @@ export default function App({
       stroked: false,
       getFillColor: [0, 0, 0, 0]
     }),
+    new ScatterplotLayer({
+      id: 'arrivals',
+      data: arrivals,
+      radiusScale: 6,
+      radiusMinPixels: 0,
+      radiusMaxPixels: 100,
+      getPosition: d => d.coordinates,
+      getRadius: d => isVisible(d.timestamp, this.state.time, 10, 25),
+      getFillColor: d => [253, 128, 93],
+      getLineColor: d => [0, 0, 0],
+      currentTime: this.state.time,
+      getTimestamps: d => d.timestamp,
+      updateTriggers: {
+        getRadius: [d => isVisible(d.timestamp, this.state.time, 10, 25)]
+      },
+      transitions: {
+        getRadius: {
+          type: 'spring',
+          stiffness: 0.01,
+          damping: 0.15,
+          duration: 200
+        }
+      }
+    }),
+    new PathLayer({
+      id: 'routes',
+      data: routes,
+      widthMinPixels: 3,
+      rounded: true,
+      getPath: e => e.path,
+      getColor: e => e.color, //colorToRGBArray(d.color),
+      getWidth: 3
+    }),
     new TripsLayer({
       id: 'trips',
       data: trips,
       getPath: d => d.path,
       getTimestamps: d => d.timestamps,
-      getColor: [253, 128, 93],
+      getColor: [253, 128, 93], //d => (d.vendor === 0 ? theme.trailColor0 : theme.trailColor1),
       opacity: 1,
       widthMinPixels: 3,
       rounded: true,
       trailLength,
-      currentTime: time,
+      currentTime: this.state.time,
       getWidth: 3,
       shadowEnabled: false
     }),
-    new PolygonLayer({
-      id: 'buildings',
-      data: buildings,
-      extruded: true,
-      wireframe: false,
-      opacity: 0.5,
-      getPolygon: f => f.polygon,
-      getElevation: f => f.height,
-      getFillColor: theme.buildingColor,
-      material: theme.material
+    new IconLayer({
+      id: 'stops',
+      data: stops,
+      pickable: true,
+      iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
+      iconMapping: ICON_MAPPING,
+      getIcon: g => 'marker',
+      sizeScale: 10,
+      getPosition: g => g.coordinates,
+      getSize: g => 3,
+      getColor: g => g.color,
+      getPixelOffset: [0, -12]
+    }),
+    new TextLayer({
+      id: 'messages',
+      data: messages,
+      getPosition: d => d.coordinates,
+      getText: d => d.notification,
+      getSize: 16,
+      getColor: d => (d.notification === "transfer aborted" ? [255, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)] : [0, 0, 0, isVisible(d.timestamp, this.state.time, 30, 255)]),
+      backgroundColor: [255, 255, 255],
+      getTextAnchor: 'middle',
+      getAlignmentBaseline: 'top',
+      getPixelOffset: [0, 3],
+      updateTriggers: {
+        getColor: [d => isVisible(d.timestamp, this.state.time, 30, 255)]
+      }
+      /*
+      transitions: {
+        getColor: {
+          type: 'spring',
+          stiffness: 0.01,
+          damping: 0.15,
+          duration: 20
+          //enter: d => [255]
+        }
+      }
+      */
     })
   ];
 
