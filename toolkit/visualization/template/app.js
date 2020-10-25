@@ -13,17 +13,17 @@ import {ScatterplotLayer} from '@deck.gl/layers';
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoiZXJpY2J1c2giLCJhIjoiY2thcXVzMGszMmJhZjMxcDY2Y2FrdXkwMSJ9.cwBqtbXpWJbtAEGli1AIIg";
 
-const r = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/routes.json';
-const m = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/messages.json';
-const t = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/trips.json';
-const s = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/stops.json';
-const a = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/arrivals.json';
-const s_zoom = 12;
-const loop_l = 64800;
-const trail_l = 120;
-const animation_s = 2;
-const lon = 7.841710;
-const lat = 47.995712;
+const r = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/regiaoSul/routes.json';
+const m = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/regiaoSul/messages.json';
+const t = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/regiaoSul/trips.json';
+const s = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/regiaoSul/stops.json';
+const a = 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/regiaoSul/arrivals.json';
+const s_zoom = 9;
+const loop_l = 604800;
+const trail_l = 720;
+const animation_s = 30;
+const lon = -52.789164;
+const lat = -31.832282;
 
 const DATA_URL = {
   ROUTES: r,
