@@ -13,7 +13,7 @@ def message_json(local_coordinates: str, gps_coordinates: str, scenario: str):
 
     json_file = json.dumps(dict_list, indent=2)
 
-    with open("toolkit/json/json_arrays/" + scenario + "/messages.json", "w") as file:
+    with open("toolkit/visualization/json_arrays/" + scenario + "/messages.json", "w") as file:
         file.write(json_file)
 
 

@@ -37,9 +37,9 @@ def make_routes(gps_coords: str, scenario: str) -> None:
     route_list = []
     coords = cc.gps_list(gps_coords)
 
-    for filename in os.listdir("toolkit/json/routes"):
+    for filename in os.listdir("toolkit/visualization/routes"):
         if filename != ".DS_Store":
-            with open("toolkit/json/routes/" + filename, 'r') as f:
+            with open("toolkit/visualization/routes/" + filename, 'r') as f:
                 nodes = f.read()
                 nodes_list = wkt.parse_wkt_route(nodes, coords)
                 # color = make_color()
@@ -51,5 +51,5 @@ def make_routes(gps_coords: str, scenario: str) -> None:
 
     routes_json = json.dumps(route_list, indent=2)
 
-    with open("toolkit/json/json_arrays/" + scenario + "/routes.json", "w") as file:
+    with open("toolkit/visualization/json_arrays/" + scenario + "/routes.json", "w") as file:
         file.write(routes_json)

@@ -13,7 +13,7 @@ def make_arrivals(local_coordinates: str, gps_coordinates: str, scenario: str) -
 
     json_file = json.dumps(dict_list, indent=2)
 
-    with open("toolkit/json/json_arrays/" + scenario + "/arrivals.json", "w") as file:
+    with open("toolkit/visualization/json_arrays/" + scenario + "/arrivals.json", "w") as file:
         file.write(json_file)
 
 
