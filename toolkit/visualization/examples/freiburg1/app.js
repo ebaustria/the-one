@@ -20,11 +20,11 @@ const DATA_URL = {
   //  'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/buildings.json', // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/trips/trips-v7.json' // eslint-disable-line
   //TRIPS: 'https://raw.githubusercontent.com/ebaustria/coord_conversion/master/one_trace.json',
-  ROUTES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/routes.json',
-  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/messages.json',
-  TRIPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/trips.json',
-  STOPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/stops.json',
-  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/json/json_arrays/freiburg1/arrivals.json',
+  ROUTES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/routes.json',
+  MESSAGES: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/messages.json',
+  TRIPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/trips.json',
+  STOPS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/stops.json',
+  ARRIVALS: 'https://raw.githubusercontent.com/ebaustria/the-one/master/toolkit/visualization/json_arrays/freiburg1/arrivals.json',
   //CARRIED: 'https://raw.githubusercontent.com/ebaustria/regiaoSul/messages/trips.json'
 };
 
