@@ -48,17 +48,17 @@ In order to visualize public transit in deck.gl, it is necessary to create a fil
 # Visualizing Simulations from the-ONE
 ## regiaoSul
 
-If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/json```, create and activate a virtual environment, and install the dependencies:
+If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/visualization```, create and activate a virtual environment, and install the dependencies:
 
 ```
-cd toolkit/json
+cd toolkit/visualization
 python3 -m venv --without-pip .venv
 curl -sS https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Navigate to ```the-one/toolkit/json/longDistance``` and run readMap.py:
+Navigate to ```the-one/toolkit/visualization/longDistance``` and run readMap.py:
 
 ```
 cd longDistance
@@ -97,7 +97,7 @@ In step 5, the script runs the simulation for your scenario.
 
 ## Creating JSON Files
 
-Navigate to the-one and install the dependencies for ```the-one/toolkit/visualization``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/json/json_arrays/<i>your_map</i></pre>
+Navigate to the-one and install the dependencies for ```the-one/toolkit/visualization``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/visualization/json_arrays/<i>your_map</i></pre>
 
 <pre>
 cd ../..
@@ -136,7 +136,7 @@ deck.gl uses special classes called layers to visualize datasets. Each layer cla
 
 Open deck.gl/examples/website/trips/app.js. We need to modify app.js to get it to visualize our data.
 
-**Note**: Functioning versions of app.js are located in ```the-one/toolkit/json/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
+**Note**: Functioning versions of app.js are located in ```the-one/toolkit/visualization/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
 
 First, make sure the necessary layer classes are imported at the top of the file:
 
