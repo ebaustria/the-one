@@ -1,10 +1,10 @@
 from typing import List, Dict
-import json
 import lib.coord_conversion as cc
 import lib.wkt_parser as wkt
 from os import path
 
 
+# Makes a list of dictionaries
 def build_list(stops: List[List[float]], color: List[int], json_list: List[Dict]) -> List[Dict]:
 
     for coord in stops:
@@ -18,7 +18,8 @@ def build_list(stops: List[List[float]], color: List[int], json_list: List[Dict]
     return json_list
 
 
-def make_stops(gps_coordinates: str, scenario: str) -> None:
+# Reads stop files, parses the data, and puts it into a list
+def make_stops(gps_coordinates: str, scenario: str) -> List[Dict]:
 
     result = []
     stations_list = []
@@ -46,7 +47,4 @@ def make_stops(gps_coordinates: str, scenario: str) -> None:
     result = build_list(stations_list, [0, 255, 255], result)
     result = build_list(cities_list, [255, 0, 0], result)
 
-    stops_json = json.dumps(result, indent=2)
-
-    with open("toolkit/visualization/json_arrays/" + scenario + "/stops.json", "w") as file:
-        file.write(stops_json)
+    return result

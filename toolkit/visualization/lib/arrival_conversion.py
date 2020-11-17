@@ -1,22 +1,19 @@
 from typing import Tuple, List, Dict
 import lib.coord_conversion as cc
-import json
 
 
-def make_arrivals(local_coordinates: str, gps_coordinates: str, scenario: str) -> None:
+def make_arrivals(local_coordinates: str, gps_coordinates: str) -> List[Dict]:
 
     arrivals_timestamps = timestamps_list(local_coordinates)
     arrivals_gps = cc.gps_list(gps_coordinates)
-    arrivals_final_coords = final_list(arrivals_timestamps, arrivals_gps)
+    arrivals_final_coords = combine_lists(arrivals_timestamps, arrivals_gps)
 
     dict_list = [single_dictionary(entry) for entry in arrivals_final_coords]
 
-    json_file = json.dumps(dict_list, indent=2)
-
-    with open("toolkit/visualization/json_arrays/" + scenario + "/arrivals.json", "w") as file:
-        file.write(json_file)
+    return dict_list
 
 
+# Makes a single dictionary that will be stored as an element in the final list
 def single_dictionary(tup: Tuple[List[float], float]) -> Dict:
     new_dict = {}
     new_dict["coordinates"] = tup[0]
@@ -32,7 +29,6 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[Tuple[float, float], f
     time_coords_1 = []
 
     with open(local_coordinates, 'r') as time:
-        print("    Reading local coordinates and timestamps...")
         reader = time.readlines()
         for row in reader:
             coords_time = row.split()
@@ -45,6 +41,7 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[Tuple[float, float], f
     return [time_tuple(entry) for entry in time_coords_1]
 
 
+# Casts elements in the input tuple to floats and returns a new tuple with those elements.
 def time_tuple(tup: Tuple[str, str]) -> Tuple[Tuple[float, float], float]:
     coords = cc.cast_to_float(tup[0])
     time = tup[1].strip(',')
@@ -54,11 +51,10 @@ def time_tuple(tup: Tuple[str, str]) -> Tuple[Tuple[float, float], float]:
 
 # Makes a list of tuples containing the GPS coordinates and timestamps from the two lists passed as parameters. Each
 # tuple contains a set of GPS coordinates and a timestamp.
-def final_list(timestamps: List[Tuple[Tuple[float, float], float]],
+def combine_lists(timestamps: List[Tuple[Tuple[float, float], float]],
                coords_list: List[Tuple[Tuple[float, float], List[float]]]) -> List[Tuple[List[float], float]]:
     final_coords = []
 
-    print("    Making list of GPS coordinates with timestamps...")
     for coords, timestamp in timestamps:
         for local, gps in coords_list:
             if coords == local:

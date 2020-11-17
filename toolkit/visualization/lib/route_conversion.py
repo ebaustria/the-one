@@ -1,5 +1,4 @@
-from typing import List, Dict
-import json
+from typing import List, Dict, Union
 import lib.wkt_parser as wkt
 import pprint
 import random
@@ -9,6 +8,7 @@ import lib.coord_conversion as cc
 pp = pprint.PrettyPrinter(indent=4)
 
 
+# Generates a random color
 def make_color() -> List[int]:
     red = random.randint(50, 256)
     green = random.randint(50, 256)
@@ -20,6 +20,7 @@ def make_color() -> List[int]:
     return [red, green, blue]
 
 
+# Makes a list of dictionaries
 def build_route_list(name: str, color: List[int], nodes: List[List[float]], route_list: List[Dict]) -> List[Dict]:
 
     new_route = {
@@ -32,8 +33,8 @@ def build_route_list(name: str, color: List[int], nodes: List[List[float]], rout
 
     return route_list
 
-
-def make_routes(gps_coords: str, scenario: str) -> None:
+# Reads linestring route files, parses them, and puts them into a list
+def make_routes(gps_coords: str) -> Union[list, List[Dict]]:
     route_list = []
     coords = cc.gps_list(gps_coords)
 
@@ -49,7 +50,4 @@ def make_routes(gps_coords: str, scenario: str) -> None:
             route = route[0]
             route_list = build_route_list(route, color, nodes_list, route_list)
 
-    routes_json = json.dumps(route_list, indent=2)
-
-    with open("toolkit/visualization/json_arrays/" + scenario + "/routes.json", "w") as file:
-        file.write(routes_json)
+    return route_list

@@ -1,6 +1,6 @@
 from typing import List
 
-
+# Parses a route file so its data can be used
 def parse_wkt_route(nodes: str, coords) -> List[List[float]]:
     list_to_build = []
     nodes = nodes.strip('\n')
@@ -21,6 +21,7 @@ def parse_wkt_route(nodes: str, coords) -> List[List[float]]:
     return list_to_build
 
 
+# Parses a stop file so its data can be used
 def parse_wkt_stops(stops: List[str]) -> List[List[float]]:
     result = []
 

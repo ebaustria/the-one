@@ -1,38 +1,36 @@
 from typing import List, Tuple, Dict
-import json
 
 
-def make_trips(local_coordinates: str, gps_coordinates: str, scenario: str) -> None:
+def make_trips(local_coordinates: str, gps_coordinates: str) -> List[Dict]:
 
     timestamps = timestamps_list(local_coordinates)
     coords_list = gps_list(gps_coordinates)
     final_coords = final_list(timestamps, coords_list)
 
     # Makes dictionary out of data from final_coords. Coordinates and timestamps are mapped to vehicle names.
-    new_dict = {}
+    complete_dict = {}
     for name, coords, timestamp, messages in final_coords:
-        if name not in new_dict.keys():
-            new_dict[name] = []
+        if name not in complete_dict.keys():
+            complete_dict[name] = []
         new_entry = (coords, timestamp)
-        new_dict[name].append(new_entry)
+        complete_dict[name].append(new_entry)
 
     # Converts each key-value pair from new_dict into a dictionary and adds each dictionary to a list.
-    print("    Making final list of dictionaries...")
-    json_list = []
-    for name in new_dict.keys():
-        new_json = {
+    dict_list = []
+    for name in complete_dict.keys():
+        new_dict = {
             "vendor": name,
             "path": [],
             "timestamps": []
         }
 
-        for coords, timestamp in new_dict[name]:
-            new_json["path"].append(coords)
-            new_json["timestamps"].append(timestamp)
+        for coords, timestamp in complete_dict[name]:
+            new_dict["path"].append(coords)
+            new_dict["timestamps"].append(timestamp)
 
-        json_list.append(new_json)
+        dict_list.append(new_dict)
 
-    write_json(json_list, scenario)
+    return dict_list
 
 
 def gps_list(gps_coordinates: str) -> List[Tuple[Tuple[float, float], List[float]]]:
@@ -41,7 +39,6 @@ def gps_list(gps_coordinates: str) -> List[Tuple[Tuple[float, float], List[float
     coords_list_1 = []
 
     with open(gps_coordinates, 'r') as coordinates:
-        print("    Making list of local-GPS tuples...")
         splt_char = ','
         n = 2
         reader = coordinates.readlines()
@@ -58,6 +55,7 @@ def gps_list(gps_coordinates: str) -> List[Tuple[Tuple[float, float], List[float
     return [gps_tuple(entry) for entry in coords_list_1]
 
 
+# Casts a pair of GPS coordinates to floats and stores it as a list with two elements (necessary for formatting)
 def gps_tuple(tup: Tuple[str, str]) -> Tuple[Tuple[float, float], List[float]]:
     coords = cast_to_float(tup[0])
     gps = cast_to_float(tup[1])
@@ -71,7 +69,6 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[str, Tuple[float, floa
     time_coords_1 = []
 
     with open(local_coordinates, 'r') as time:
-        print("    Reading local coordinates and timestamps...")
         reader = time.readlines()
         for row in reader:
             coords_time = row.split()
@@ -86,6 +83,7 @@ def timestamps_list(local_coordinates: str) -> List[Tuple[str, Tuple[float, floa
     return [time_tuple(entry) for entry in time_coords_1]
 
 
+# Casts elements in the input tuple to floats and ints and returns a new tuple with those elements.
 def time_tuple(tup: Tuple[str, str, str, str]) -> Tuple[str, Tuple[float, float], float, int]:
     coords = cast_to_float(tup[1])
     time = tup[2].strip(',')
@@ -95,12 +93,12 @@ def time_tuple(tup: Tuple[str, str, str, str]) -> Tuple[str, Tuple[float, float]
 
 
 # Makes a list of tuples containing the GPS coordinates and timestamps from the two lists passed as parameters. Each
-# tuple contains a name, a set of GPS coordinates and a timestamp.
+# tuple contains a name, a set of GPS coordinates, a timestamp, and the number of messages the vehicle was carrying at
+# that timestamp.
 def final_list(timestamps: List[Tuple[str, Tuple[float, float], float, int]],
                coords_list: List[Tuple[Tuple[float, float], List[float]]]) -> List[Tuple[str, List[float], float, int]]:
     final_coords = []
 
-    print("    Making list of GPS coordinates with timestamps...")
     for name, coords, timestamp, messages in timestamps:
         for local, gps in coords_list:
             if coords == local:
@@ -121,12 +119,3 @@ def cast_to_float(coords: str) -> Tuple[float, float]:
     new_coords = (x, y)
 
     return new_coords
-
-
-# Writes the list of dictionaries to a JSON file.
-def write_json(json_list: List[Dict], scenario: str) -> None:
-
-    json_file = json.dumps(json_list, indent=2)
-
-    with open("toolkit/visualization/json_arrays/" + scenario + "/trips.json", "w") as file:
-        file.write(json_file)
