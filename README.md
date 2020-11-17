@@ -37,7 +37,6 @@ Navigate to ```the-one``` and compile the program:
 
 ```
 cd ../..
-cd ..
 cd the-one
 ./compile.sh
 ```
@@ -49,17 +48,17 @@ In order to visualize public transit in deck.gl, it is necessary to create a fil
 # Visualizing Simulations from the-ONE
 ## regiaoSul
 
-If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/json```, create and activate a virtual environment, and install the dependencies:
+If you are visualizing the regiaoSul scenario, navigate to ```the-one/toolkit/visualization```, create and activate a virtual environment, and install the dependencies:
 
 ```
-cd toolkit/json
+cd toolkit/visualization
 python3 -m venv --without-pip .venv
 curl -sS https://bootstrap.pypa.io/get-pip.py | .venv/bin/python
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Navigate to ```the-one/toolkit/json/longDistance``` and run readMap.py:
+Navigate to ```the-one/toolkit/visualization/longDistance``` and run readMap.py:
 
 ```
 cd longDistance
@@ -67,6 +66,13 @@ python3 -m readMap
 ```
 
 On line 134, ```readMap.py``` writes a file called ```regiaoSul_gps_coordinates.csv```. This file is the mapping of the local coordinates of each node (used in the ONE) to that node's corresponding GPS coordinates.
+
+After creating the mapping of local coordinates to GPS coordinates, navigate to the-one and run the simulation manually:
+
+<pre>
+cd ../..
+./one.sh <i>your_map</i>_settings.txt
+</pre>
 
 ## Short-Distance Scenarios
 
@@ -81,31 +87,37 @@ pip install -r requirements.txt
 ./prepare_map.sh <i>your_map_definition</i>
 </pre>
 
-Allow the script to run until it reaches step 4 (Compile). In step 3, the script creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>
+Allow the script to run to completion. In step 3, the script creates the files that are needed to run the simulation with your map, and it will also create a file called <pre><i>your_map</i>_gps_coordinates.csv</pre>
 
 This file contains the mapping of local coordinates to GPS coordinates.
 
-## Running the-ONE
+In step 5, the script runs the simulation for your scenario.
 
-After creating the mapping of local coordinates to GPS coordinates, navigate to the-one and run the simulation:
-
-<pre>
-cd ../..
-./one.sh <i>your_map</i>_settings.txt
-</pre>
-
-**Note**: It may be necessary to remove the flight recorder in order to run the simulation. If this is the case, open ```the-one/one.sh``` and remove ```-XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr ``` from the file. Afterwards, it should work. When the simulation is finished, it will write three reports. The lines of one of the reports have the following form: DTNHost name, local coordinates, timestamp, messages. The DTNHost name is the name of the DTNHost in question, the local coordinates are a pair of local coordinates used in the ONE, the timestamp is the simulation time at which the DTNHost is located at the local coordinates in question, and the messages are the number of message bundles that DTNHost is carrying. One of the other reports has the following form: local coordinates, timestamp, action. The action is a short string that describes the messaging activity of the DTNHost at that timestamp. The lines of the final report consist of local coordinates and timestamps.
+**Note**: It may be necessary to remove the flight recorder in order to run the simulation. If this is the case, open ```the-one/one.sh``` and remove ```-XX:+FlightRecorder -XX:StartFlightRecording=duration=60s,filename=myrecording.jfr ``` from the file. Afterwards, it should work. When the simulation is finished, it will write three reports. The lines of the local coordinates report have the following form: DTNHost name, local coordinates, timestamp, messages. The DTNHost name is the name of the DTNHost in question, the local coordinates are a pair of local coordinates used in the ONE, the timestamp is the simulation time at which the DTNHost is located at the local coordinates in question, and the messages are the number of message bundles that DTNHost is carrying. The messaging report has the following form: local coordinates, timestamp, action. The action is a short string that describes the messaging activity of the DTNHost at that timestamp. The lines of the final report consist of local coordinates and timestamps.
 
 ## Creating JSON Files
 
-While still in the-one, install the dependencies for ```the-one/toolkit/json``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/json/json_arrays/<i>your_map</i></pre>
+Navigate to the-one and install the dependencies for ```the-one/toolkit/visualization``` if you haven't already and run ```prepare_json.sh``` with your scenario name as an argument. Running this shell script will parse the data in each of the four files that have been generated up to this point, and it will use them to create five JSON files that can be used for visualization in ```deck.gl```. The JSON files are written to <pre>the-one/toolkit/visualization/json_arrays/<i>your_map</i></pre>
 
 <pre>
-pip install -r toolkit/json/requirements.txt
+cd ../..
+pip install -r toolkit/visualization/requirements.txt
 ./prepare_json.sh <i>your_map</i>
 </pre>
 
 ## Visualizing the Data
+
+**Note**: Subject to change.
+
+Navigate to ```the-one/toolkit/visualization``` and run ```app_configuration.py``` with the same argument you used for ```prepare_json.sh```. This will configure a version of ```app.js``` located in ```the-one/toolkit/visualization/template```:
+
+<pre>
+cd toolkit/visualization
+python3 app_configuration.py <i>your_map</i>
+</pre>
+
+Copy the new version of app.js to ```deck.gl/examples/website/trips``` and continue these steps starting at "Running the Visualization".
+
 
 Create a remote repository and add it if you haven't already. Stage the five JSON files from the previous section to be committed, commit them, and push them to your remote:
 
@@ -124,7 +136,7 @@ deck.gl uses special classes called layers to visualize datasets. Each layer cla
 
 Open deck.gl/examples/website/trips/app.js. We need to modify app.js to get it to visualize our data.
 
-**Note**: Functioning versions of app.js are located in ```the-one/toolkit/json/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
+**Note**: Functioning versions of app.js are located in ```the-one/toolkit/visualization/examples``` and can be consulted for examples. If you would like to skip the rest of this section, you should be able to navigate to deck.gl/examples/website/trips and replace the version of app.js that is located there with one of the versions of app.js that is located in the-one. Once you have replaced app.js you can continue with these steps starting at "Running the Visualization".
 
 First, make sure the necessary layer classes are imported at the top of the file:
 
