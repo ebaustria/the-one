@@ -5,5 +5,5 @@ pip==20.2.3
 pytz==2020.1
 setuptools==50.3.0
 typing==3.7.4.3
-wheel==0.35.1
+wheel==0.38.1
 zope.interface==5.1.0
